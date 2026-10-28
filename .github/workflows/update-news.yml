@@ -1,10 +1,20 @@
 name: Update News
 
+# Updates täglich um 05:00 und 12:00 Uhr Schweizer Zeit (Zeiten: config.json → "schedule").
+# GitHub kennt nur UTC und startet geplante Läufe oft verspätet oder lässt sie aus. Darum:
+#  · Termine für Winter- UND Sommerzeit, jeweils mit Ersatz-Termin ~40 Min später
+#  · scripts/should_run.py lässt pro Termin genau EIN Update durch (die anderen Läufe enden nach ~15 s)
 on:
   schedule:
-    # Zeiten in UTC. Winter (MEZ): 05:23, 12:23, 17:23 Uhr · Sommer (MESZ): 06:23, 13:23, 18:23 Uhr
-    - cron: "23 4,11,16 * * *"
-  workflow_dispatch:          # manuell starten: Actions → Update News → Run workflow
+    - cron: "3 3,4,10,11 * * *"    # Haupttermine (03/04 UTC = 05 Uhr, 10/11 UTC = 12 Uhr, je nach Sommer/Winter)
+    - cron: "43 3,4,10,11 * * *"   # Ersatz-Termine, falls GitHub einen Lauf auslässt
+  workflow_dispatch:               # Actions → Update News → Run workflow
+    inputs:
+      source:
+        description: "manual = sofort aktualisieren · cron = nur wenn ein Termin fällig ist (für externe Wecker)"
+        type: choice
+        options: [manual, cron]
+        default: manual
   push:
     branches: [main]
     paths:
@@ -17,7 +27,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  models: read                # gratis KI über GitHub Models (Übersetzung + Radio-Moderation)
+  models: read                     # gratis KI über GitHub Models (Übersetzung + Radio-Moderation)
 
 concurrency:
   group: pages
@@ -27,10 +37,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
     steps:
       - uses: actions/checkout@v5
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ist ein Update fällig?
+        id: gate
+        env:
+          EVENT: ${{ github.event_name }}
+          SOURCE: ${{ inputs.source }}
+        run: python3 scripts/should_run.py
+
       - name: Nachrichten sammeln
+        if: steps.gate.outputs.run == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional: eigene KI (z.B. Ollama auf dem Heimserver, OpenAI …) – als Repository-Secrets anlegen
@@ -41,17 +65,31 @@ jobs:
           mkdir -p _site
           python3 scripts/fetch_news.py --config config.json --out _site/news.json
 
+      # Natürliche Neural-Stimme fürs Radio. Schlägt das fehl, nutzt die Seite die Browser-Stimme.
+      - name: Radio einsprechen (Neural-Stimme)
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        timeout-minutes: 8
+        env:
+          TTS_VOICE: ${{ vars.TTS_VOICE }}
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check edge-tts
+          python3 scripts/make_audio.py --config config.json --news _site/news.json --out _site
+
       - name: Seite zusammenstellen
+        if: steps.gate.outputs.run == 'true'
         run: |
           cp index.html _site/
           touch _site/.nojekyll
 
       - uses: actions/upload-pages-artifact@v4
+        if: steps.gate.outputs.run == 'true'
         with:
           path: _site
 
   deploy:
     needs: build
+    if: needs.build.outputs.run == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
