@@ -118,7 +118,7 @@ h1 span,h2 span{color:var(--accent)}
 .floating-card span{font:9px var(--mono);color:var(--muted2)}
 .floating-card strong{font:14px var(--mono);font-weight:500}
 .float-a{top:4%;right:-12px;animation:float 4s ease-in-out infinite}
-.float-b{bottom:-22px;left:-18px;animation:float 4.8s ease-in-out infinite reverse}
+.float-b{bottom:-44px;left:-18px;animation:float 4.8s ease-in-out infinite reverse}
 .float-a strong{color:var(--accent)}.float-b strong{color:var(--green)}
 
 .section{padding:70px 0 20px}
@@ -283,6 +283,16 @@ h1 span,h2 span{color:var(--accent)}
 .kw button{color:var(--muted);font-size:13px;line-height:1;padding:0 3px}
 .kw button:hover{color:var(--accent)}
 .modal-settings{margin-top:20px}
+.int-filter{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface2);padding:9px 12px;border-radius:5px;margin-top:22px}
+.int-filter:focus-within{border-color:var(--accent)}
+.int-filter span{font:11px var(--mono);color:var(--accent)}
+.int-filter input{background:none;border:0;outline:0;width:100%;font:12px var(--mono);color:var(--ink)}
+.int-empty{font:11px var(--mono);color:var(--muted2);padding:18px 0}
+.modal-foot .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.notice{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid rgba(255,122,61,.35);background:rgba(255,122,61,.05);padding:12px 16px;margin-bottom:16px;font:11px var(--mono);color:var(--muted)}
+.voice-hint{font:10px/1.5 var(--mono);color:var(--muted2);padding:0 0 10px;border-bottom:1px solid var(--line)}
+.voice-hint.good{color:var(--green)}
+.setup-box .hero-buttons{margin-top:18px}
 .modal-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:28px;flex-wrap:wrap}
 .modal-foot small{font:10px var(--mono);color:var(--muted2)}
 .video-modal .modal-inner{width:min(1000px,100%);padding:0}
@@ -310,6 +320,44 @@ footer button:hover{color:var(--accent)}
 .mini-player div{min-width:0;font:10px var(--mono);color:var(--muted)}
 .mini-player div b{display:block;color:var(--ink);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+/* Live */
+.live-pip{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);margin-left:6px;vertical-align:middle;animation:pulse 1.4s infinite}
+.live-player{margin-bottom:16px}
+.live-frame{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+.live-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.live-poster{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#141b24,#07090c);text-align:center;cursor:pointer;width:100%;color:var(--ink)}
+.live-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;filter:saturate(.7)}
+.live-poster .inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px}
+.live-poster .play{width:74px;height:74px;border-radius:50%;background:var(--accent);color:#170b05;display:grid;place-items:center;font-size:1.5rem;box-shadow:0 15px 45px rgba(255,122,61,.35);transition:.25s}
+.live-poster:hover .play{transform:scale(1.08)}
+.live-poster strong{font-size:clamp(1.3rem,3vw,2rem);letter-spacing:-.03em}
+.live-poster small{font:10px var(--mono);color:var(--muted)}
+.live-info{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line)}
+.live-info h3{font-size:1rem;font-weight:500;line-height:1.3}
+.live-info .meta{margin:0 0 4px;padding:0}
+.live-info .btns{display:flex;gap:8px;flex-wrap:wrap}
+.badge.live{border-color:var(--red);background:var(--red);color:#1a0505;font-weight:500;animation:pulse 1.6s infinite}
+.badge.off{color:var(--muted2)}
+.badge.soon{border-color:rgba(255,189,46,.5);color:#ffbd2e}
+.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}
+@media(max-width:600px){.chip-row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}.chip-row::-webkit-scrollbar{display:none}}
+.live-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.live-layout .live-player{margin-bottom:0}
+.live-grid{display:flex;flex-direction:column;gap:8px;max-height:calc(min(var(--max),100vw - 48px) * .4 + 60px);overflow-y:auto;padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.live-card{background:var(--surface);border:1px solid var(--line);text-align:left;transition:.25s;display:flex;flex-direction:row;overflow:hidden;flex:none}
+.live-card:hover{border-color:var(--line2);background:var(--surface2)}
+.live-card .thumb{width:128px;flex:none;border-bottom:0;border-right:1px solid var(--line)}
+.live-card .thumb .play{width:28px;height:28px;left:8px;bottom:8px;font-size:.65rem}
+.live-card .thumb .ph{font-size:10px}
+.live-card.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.live-card.offline{opacity:.6}.live-card.offline:hover{opacity:1}
+.live-card .thumb .ph{font-family:var(--mono);color:var(--muted);padding:0 10px;text-align:center}
+.live-card .vb{padding:9px 12px;min-width:0;align-self:center}
+.live-card h4{font-size:.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:940px){.live-layout{grid-template-columns:1fr}.live-grid{max-height:none;overflow:visible;padding:0}}
+.live-card .meta{margin:0 0 6px;padding:0}
+.live-card p{font:10px var(--mono);color:var(--muted2);margin-top:4px}
+.stale-note{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font:10px var(--mono);color:var(--red);border:1px solid rgba(255,95,86,.35);padding:6px 10px}
 @keyframes pulse{50%{opacity:.35}}
 @keyframes blink{50%{opacity:0}}
 @keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -370,6 +418,7 @@ footer button:hover{color:var(--accent)}
       <button data-go="#/top">Top</button>
       <button data-go="#/videos">Videos</button>
       <button data-go="#/radio">Radio</button>
+      <button data-go="#/live">Live<span class="live-pip" id="livePip" hidden></span></button>
       <button data-go="#/gemerkt">Gemerkt<span class="count" id="savedCount"></span></button>
       <button data-action="interests">Interessen</button>
     </nav>
@@ -394,7 +443,8 @@ footer button:hover{color:var(--accent)}
     <button class="modal-close" data-close aria-label="Schliessen">×</button>
     <p class="kicker">SETUP / INTERESSEN</p>
     <h2 id="intTitle">Was <span>interessiert</span> dich?</h2>
-    <p>Wähle deine Themen. Dein Feed, die Videos und das Radio-Briefing richten sich danach. Alles bleibt nur in diesem Browser gespeichert.</p>
+    <p>Wähle deine Themen – nichts ist vorausgewählt. Dein Feed, die Videos und das Radio-Briefing richten sich danach. Alles bleibt nur in diesem Browser gespeichert.</p>
+    <label class="int-filter"><span>&gt;</span><input id="intFilter" type="search" placeholder="Themen filtern, z.B. Krieg, Kultur, Ski …" autocomplete="off" aria-label="Themen filtern"></label>
     <div class="int-groups" id="interestGrid"></div>
     <div class="kw-box">
       <label for="kwInput">EIGENE STICHWORTE</label>
@@ -405,7 +455,7 @@ footer button:hover{color:var(--accent)}
       <div class="setrow"><span>Übersetzte Titel anzeigen (wenn vorhanden)</span><label class="toggle"><input type="checkbox" id="optTranslated"><span></span></label></div>
       <div class="setrow"><span>Gelesene Artikel ausblenden</span><label class="toggle"><input type="checkbox" id="optHideRead"><span></span></label></div>
     </div>
-    <div class="modal-foot"><small id="intHint">MIN. 1 THEMA</small><button class="button primary" id="intSave">Speichern ▶</button></div>
+    <div class="modal-foot"><small id="intHint">0 THEMEN</small><div class="right"><button class="button small" id="intClear">Alle abwählen</button><button class="button primary" id="intSave">Speichern ▶</button></div></div>
   </div>
 </div>
 
@@ -460,9 +510,11 @@ const LANG_NAMES = { en: "Englisch", pt: "Portugiesisch", de: "Deutsch", fr: "Fr
 /* ---------- Zustand (localStorage, abgesichert) ---------- */
 const STORE_KEY = "studerNews.v1";
 const DEFAULT_STATE = { interests: null, keywords: [], translated: true, hideRead: false, read: {}, saved: {},
-  voice: "", speed: 1, length: "normal", origLang: true, jingle: true, lastVisit: 0, sort: "score" };
+  voice: "", speed: 1, length: "normal", origLang: true, jingle: true, lastVisit: 0, sort: "score", onboarded: false, v: 2, liveCountry: "", liveChannel: "" };
 let S = { ...DEFAULT_STATE };
 try { S = { ...DEFAULT_STATE, ...JSON.parse(localStorage.getItem(STORE_KEY) || localStorage.getItem("dailyBriefing.v1") || "{}") }; } catch (e) {}
+// Migration: frühere Versionen → wer schon Interessen hat, hat das Onboarding gesehen; Stimme neu wählen (Neural)
+if ((S.v || 1) < 2) { S.voice = ""; if (Array.isArray(S.interests)) S.onboarded = true; S.v = 2; }
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} };
 const PREV_VISIT = S.lastVisit || 0;
 S.lastVisit = Date.now();
@@ -487,7 +539,7 @@ async function loadData() {
   if (S.interests) S.interests = S.interests.filter(id => topicById.has(id));
 }
 
-const myInterests = () => (S.interests && S.interests.length ? S.interests : (DATA?.defaultInterests || []).filter(id => topicById.has(id)));
+const myInterests = () => Array.isArray(S.interests) ? S.interests : [];
 const titleOf = a => (S.translated && a.titleDe) ? a.titleDe : a.title;
 const summaryOf = a => (S.translated && a.summaryDe) ? a.summaryDe : (a.summary || a.summaryDe || "");
 const isNew = a => PREV_VISIT && Date.parse(a.published) > PREV_VISIT;
@@ -587,16 +639,22 @@ const view = $("#view");
 function renderHero() {
   const ints = myInterests().map(id => topicById.get(id)?.label.split(" · ")[0]).filter(Boolean);
   const ok = (DATA.sources || []).filter(s => s.ok).length, all = (DATA.sources || []).length;
-  const lead = forYou()[0] || DATA.articles[0];
+  const lead = forYou()[0] || byId.get((DATA.top || [])[0]) || DATA.articles[0];
   const newCount = PREV_VISIT ? DATA.articles.filter(isNew).length : DATA.articles.length;
   const site = DATA.site || {};
+  const ageH = (Date.now() - Date.parse(DATA.generated)) / 36e5;
+  const stale = ageH > 19;                       // zwischen 12:00 und 05:00 liegen 17 Std.
+  const times = (DATA.schedule?.times || []).join(" · ");
   return `<section class="hero">
     <div>
-      <div class="eyebrow"><span class="live-dot"></span>FEED ONLINE <span class="dim">/ ${h(site.domain || location.host)} · ${h(site.location || "Zürich · CH")} · ${h(fmtDate())}</span></div>
+      <div class="eyebrow"><span class="live-dot ${stale ? "off" : ""}"></span>${stale ? "FEED VERALTET" : "FEED ONLINE"} <span class="dim">/ ${h(site.domain || location.host)} · ${h(site.location || "Zürich · CH")} · ${h(fmtDate())}</span></div>
       <div class="hero-heading"><span class="bracket"></span><div>
         <p class="kicker">News / Videos / Radio</p>
         <h1>Read. Listen.<br><span>Understand.</span></h1></div></div>
-      <p class="hero-description">Deine Nachrichten aus ${ok || "allen"} Quellen – sortiert nach dem, was dich interessiert${ints.length ? `: <b>${h(ints.slice(0, 4).join(", "))}</b>${ints.length > 4 ? ` + ${ints.length - 4} weitere` : ""}` : ""}${S.keywords.length ? ` und <b>#${h(S.keywords.join(" #"))}</b>` : ""}. Stand ${h(fmtTime(DATA.generated))} Uhr.</p>
+      <p class="hero-description">${ints.length || S.keywords.length
+        ? `Deine Nachrichten aus ${ok || "allen"} Quellen – sortiert nach dem, was dich interessiert${ints.length ? `: <b>${h(ints.slice(0, 4).join(", "))}</b>${ints.length > 4 ? ` + ${ints.length - 4} weitere` : ""}` : ""}${S.keywords.length ? ` und <b>#${h(S.keywords.join(" #"))}</b>` : ""}.`
+        : `Nachrichten aus ${ok || "allen"} Quellen und ${DATA.topics.length} Themen. <b>Wähle deine Interessen</b>, dann wird dieser Feed deiner.`} Stand ${h(fmtTime(DATA.generated))} Uhr.</p>
+      ${stale ? `<p class="stale-note">● Letztes Update ${h(new Date(DATA.generated).toLocaleString("de-CH", { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }))} – das geplante Update ist ausgeblieben</p>` : ""}
       <div class="hero-buttons">
         <button class="button primary" data-action="play-briefing">Briefing anhören ▶</button>
         <button class="button" data-action="interests">Interessen wählen ↗</button>
@@ -616,7 +674,8 @@ function renderHero() {
         <div class="mini-terminal">
           <div><span>● feeds.service</span><b class="t-green">ACTIVE</b></div>
           <div><span>● ai.translate</span><b class="${DATA.ai?.used ? "t-green" : "t-red"}">${DATA.ai?.used ? "ON" : "OFF"}</b></div>
-          <div><span>● radio.module</span><b class="${"speechSynthesis" in window ? "t-accent" : "t-red"}">${"speechSynthesis" in window ? "READY" : "N/A"}</b></div>
+          <div><span>● radio.voice</span><b class="${DATA.radio?.audio ? "t-green" : "speechSynthesis" in window ? "t-accent" : "t-red"}">${DATA.radio?.audio ? "NEURAL" : "speechSynthesis" in window ? "BROWSER" : "N/A"}</b></div>
+          ${times ? `<div><span>SCHEDULE</span><b>${h(times)} (CH)</b></div>` : ""}
           <div><span>LAST_SYNC</span><b>${h(new Date(DATA.generated).toLocaleString("de-CH", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }))}</b></div>
         </div>
         <span class="scanline"></span>
@@ -631,6 +690,16 @@ function renderForYou() {
   const list = visible(forYou());
   const ints = myInterests();
   let out = renderHero();
+  if (!ints.length && !S.keywords.length) {
+    const top = visible(uniqByUrl([...(DATA.top || []).map(id => byId.get(id)).filter(Boolean), ...sorted(DATA.articles)])).slice(0, 13);
+    out += `<section class="section" style="padding-top:20px">` + sectionHead("01", "Start", "Noch keine <span>Interessen.</span>",
+      "Bis du deine Themen gewählt hast, siehst du hier die grössten Meldungen des Tages.") +
+      `<div class="empty setup-box" style="margin-bottom:16px"><h3>Was interessiert dich?</h3><p>Wähle aus ${DATA.topics.length} Themen – von Fussball, Formel 1 und Gaming bis Krieg in der Ukraine, Kultur oder globaler Wirtschaft. Nichts ist vorausgewählt.</p>
+        <div class="hero-buttons"><button class="button primary" data-action="interests">Interessen wählen ↗</button><a class="button" href="#/top">Alle Top-Meldungen</a></div></div>` +
+      cardsGrid(top, 0, true) + `</section>`;
+    view.innerHTML = out;
+    return;
+  }
   out += `<section class="section" style="padding-top:20px">` + sectionHead("01", "Für dich", "Deine <span>Top-Meldungen.</span>",
     "Gewichtet nach Aktualität, Anzahl Quellen und deinen Stichworten.");
   if (!list.length) out += emptyBox("Keine passenden Meldungen", "Wähle weitere Interessen oder entferne den Filter für gelesene Artikel.");
@@ -683,7 +752,7 @@ function renderTopic(id) {
 let videoFilter = null;
 function renderVideos() {
   const ints = myInterests();
-  const f = videoFilter || "mine";
+  const f = videoFilter || (ints.length ? "mine" : "all");
   let list = DATA.videos;
   if (f === "mine") list = list.filter(v => ints.includes(v.topic));
   else if (f !== "all") list = list.filter(v => v.topic === f);
@@ -726,6 +795,72 @@ function renderNoData(err) {
     <p style="margin-top:14px;font:10px var(--mono);color:var(--muted2)">FEHLER: ${h(err?.message || err)}</p></div></section>`;
 }
 
+/* ---------- Live-News ---------- */
+const LIVE_FLAGS = { BR: "BR", CH: "CH", DE: "DE", INT: "INT", GB: "UK", US: "US", FR: "FR", IT: "IT", LATAM: "LATAM", ASIA: "ASIA", SPACE: "SPACE" };
+const liveChannels = () => (DATA.live || []).filter(c => /^UC[\w-]{22}$/.test(c.channelId || ""));
+const liveEmbed = (c, alt = false) => {
+  const vid = /^[\w-]{11}$/.test(c.videoId || "") ? c.videoId : "";
+  if (vid && c.live && !alt) return `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1`;
+  return `https://www.youtube.com/embed/live_stream?channel=${c.channelId}&autoplay=1&playsinline=1`;
+};
+const liveLink = c => (c.live && /^[\w-]{11}$/.test(c.videoId || "")) ? `https://www.youtube.com/watch?v=${c.videoId}` : `https://www.youtube.com/channel/${c.channelId}/live`;
+const liveThumb = c => /^[\w-]{11}$/.test(c.videoId || "") ? `https://i.ytimg.com/vi/${c.videoId}/hqdefault${c.live ? "_live" : ""}.jpg` : "";
+const liveBadge = c => c.live ? `<span class="badge live">● LIVE</span>` : c.upcoming ? `<span class="badge soon">GEPLANT</span>` : `<span class="badge off">OFFLINE</span>`;
+let liveAlt = false;
+
+function renderLive() {
+  const all = liveChannels();
+  const C = DATA.liveCountries || {};
+  if (!all.length) {
+    view.innerHTML = `<section class="section">${sectionHead("05", "Live", "Live <span>dabei sein.</span>")}${emptyBox("Noch keine Live-Sender", "Beim nächsten Update werden die Live-Sender aus config.json geprüft.")}</section>`;
+    return;
+  }
+  const countries = [...new Set(all.map(c => c.country))];
+  const f = countries.includes(S.liveCountry) ? S.liveCountry : "";
+  const list = all.filter(c => !f || c.country === f).sort((a, b) => (b.live - a.live) || ((b.upcoming || 0) - (a.upcoming || 0)));
+  const cur = all.find(c => c.id === S.liveChannel) || list.find(c => c.live) || list[0];
+  const nLive = all.filter(c => c.live).length;
+  const chip = (id, label, n) => `<button class="chip ${f === id ? "current" : ""}" data-lcountry="${h(id)}"><i>${id ? h(LIVE_FLAGS[id] || id) : "◎"}</i>${h(label)} <b>${n}</b></button>`;
+  const checked = all[0]?.checked ? fmtTime(all[0].checked) : fmtTime(DATA.generated);
+  view.innerHTML = `<section class="section">${sectionHead("05", "Live", "Live <span>dabei sein.</span>",
+    `Nachrichtensender, die auf YouTube live senden. ${nLive} von ${all.length} waren beim letzten Check (${checked} Uhr) live.`)}
+    <div class="chip-row">
+      ${chip("", "Alle Länder", all.filter(c => c.live).length)}
+      ${countries.map(id => chip(id, C[id] || id, all.filter(c => c.country === id && c.live).length)).join("")}
+    </div>
+    <div class="live-layout">
+    <div class="terminal-window live-player" id="livePlayer" data-cur="${h(cur.id)}">
+      <div class="terminal-bar"><span class="d1">●</span><span class="d2">●</span><span class="d3">●</span><b>live@studer:~ ${h(cur.name)}</b><span class="right">${liveBadge(cur)}</span></div>
+      <div class="live-frame" id="liveFrame">${livePoster(cur)}</div>
+      <div class="live-info">
+        <div><div class="meta"><span class="src">${h(C[cur.country] || cur.country)}</span><span>${h((cur.lang || "").toUpperCase())}</span>${cur.note ? `<span>${h(cur.note)}</span>` : ""}</div>
+          <h3>${h(cur.live && cur.title ? cur.title : cur.name)}</h3></div>
+        <div class="btns"><button class="button small" data-action="live-reload" title="Falls der Stream nicht startet: aktuellen Stream des Kanals laden">↻ Stream neu laden</button>
+          <a class="button small" href="${h(liveLink(cur))}" target="_blank" rel="noopener noreferrer">Auf YouTube ↗</a></div>
+      </div>
+      <span class="scanline"></span>
+    </div>
+    <div class="live-grid">${list.map(c => {
+      const th = liveThumb(c);
+      return `<button class="live-card ${c.id === cur.id ? "on" : ""} ${c.live ? "" : "offline"}" data-live="${h(c.id)}" aria-label="${h(c.name)} ansehen">
+        <div class="thumb"><span class="ph">${h(c.name)}</span>${th ? `<img src="${h(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-hideonerror>` : ""}<span class="scanline"></span>${c.live ? `<span class="play">▶</span>` : ""}</div>
+        <div class="vb"><div class="meta">${liveBadge(c)}<span>${h(LIVE_FLAGS[c.country] || c.country)}</span><span>${h((c.lang || "").toUpperCase())}</span></div>
+          <h4>${h(c.name)}</h4>${c.note ? `<p>${h(c.note)}</p>` : ""}</div></button>`; }).join("")}</div>
+    </div>
+    <p style="margin-top:18px;font:10px var(--mono);color:var(--muted2)">HINWEIS: Manche Sender erlauben das Abspielen nur direkt auf YouTube. Startet ein Stream nicht, hilft „↻ Stream neu laden“ oder „Auf YouTube ↗“.</p>
+    </section>`;
+}
+function livePoster(c) {
+  const th = liveThumb(c);
+  return `<button class="live-poster" data-action="live-play" aria-label="${h(c.name)} abspielen">${th ? `<img src="${h(th)}" alt="" referrerpolicy="no-referrer" data-hideonerror>` : ""}
+    <span class="inner"><span class="play">▶</span><strong>${h(c.name)}</strong><small>${c.live ? "JETZT LIVE · KLICKEN ZUM ABSPIELEN" : c.upcoming ? "STREAM GEPLANT · TROTZDEM VERSUCHEN" : "BEIM LETZTEN CHECK OFFLINE · TROTZDEM VERSUCHEN"}</small></span></button>`;
+}
+function playLive(alt = false) {
+  const c = liveChannels().find(x => x.id === $("#livePlayer")?.dataset.cur); if (!c) return;
+  if (Radio.playing) Radio.pause();
+  $("#liveFrame").innerHTML = `<iframe src="${h(liveEmbed(c, alt))}" title="${h(c.name)} live" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+}
+
 /* ---------- Topicbar & Navigation ---------- */
 function renderTopicbar(currentTopic) {
   const ints = myInterests();
@@ -749,6 +884,7 @@ function route() {
     case "thema": renderTopic(decodeURIComponent(arg)); break;
     case "videos": renderVideos(); break;
     case "radio": Radio.render(); break;
+    case "live": renderLive(); break;
     case "gemerkt": renderSaved(); break;
     case "suche": renderSearch(decodeURIComponent(arg)); break;
     default: renderForYou();
@@ -762,6 +898,7 @@ function go(hash) { if (location.hash === hash) rerender(); else { location.hash
 let draft = null;
 function openInterests() {
   draft = { interests: new Set(myInterests()), keywords: [...S.keywords] };
+  $("#intFilter").value = "";
   $("#optTranslated").checked = S.translated;
   $("#optHideRead").checked = S.hideRead;
   drawInterests();
@@ -771,16 +908,20 @@ function drawInterests() {
   const card = t => `<button class="interest ${draft.interests.has(t.id) ? "on" : ""}" data-int="${h(t.id)}" aria-pressed="${draft.interests.has(t.id)}">
     <span class="ck">✓</span><span class="ic">${h(t.icon)}</span><strong>${h(t.label)}</strong><small>${h(t.description || "")}</small>
     <span class="n">${t.count} ARTIKEL · ${t.videos || 0} VIDEOS</span></button>`;
+  const q = norm($("#intFilter").value.trim());
+  const match = t => !q || norm(`${t.label} ${t.description || ""} ${t.group || ""}`).includes(q);
   const groups = [...new Set(DATA.topics.map(t => t.group || "Weitere"))];
-  $("#interestGrid").innerHTML = groups.map((g, gi) => {
-    const ts = DATA.topics.filter(t => (t.group || "Weitere") === g);
+  const html = groups.map((g, gi) => {
+    const ts = DATA.topics.filter(t => (t.group || "Weitere") === g && match(t));
+    if (!ts.length) return "";
     const all = ts.every(t => draft.interests.has(t.id));
     return `<div class="int-ghead"><p class="kicker">${pad(gi + 1)} / ${h(g)}</p><button class="link-more" data-intgroup="${h(g)}">${all ? "− KEINE" : "+ ALLE"}</button></div>
       <div class="interest-grid">${ts.map(card).join("")}</div>`;
   }).join("");
+  $("#interestGrid").innerHTML = html || `<p class="int-empty">Kein Thema gefunden – füge es unten als eigenes Stichwort hinzu.</p>`;
   $("#kwList").innerHTML = draft.keywords.map((k, i) => `<span class="kw"># ${h(k)}<button data-kwdel="${i}" aria-label="Entfernen">×</button></span>`).join("");
   $("#intHint").textContent = `${draft.interests.size} THEMEN · ${draft.keywords.length} STICHWORTE`;
-  $("#intSave").disabled = !draft.interests.size && !draft.keywords.length;
+  $("#intClear").disabled = !draft.interests.size && !draft.keywords.length;
 }
 function addKeyword() {
   const inp = $("#kwInput");
@@ -793,6 +934,7 @@ function saveInterests() {
   S.keywords = draft.keywords;
   S.translated = $("#optTranslated").checked;
   S.hideRead = $("#optHideRead").checked;
+  S.onboarded = true;
   save(); closeModals(); Radio.invalidate(); rerender();
   toast(`Gespeichert: <b>${S.interests.length}</b> Themen · <b>${S.keywords.length}</b> Stichworte`);
 }
@@ -801,7 +943,7 @@ function saveInterests() {
 function openModal(sel) { $(sel).classList.add("open"); document.body.style.overflow = "hidden"; }
 function closeModals() {
   $$(".modal.open").forEach(m => m.classList.remove("open")); document.body.style.overflow = ""; stopVideo();
-  if (DATA && !Array.isArray(S.interests)) { S.interests = myInterests(); save(); }   // Onboarding nur einmal zeigen
+  if (DATA && !S.onboarded) { S.onboarded = true; save(); }   // Auswahl-Fenster nur beim ersten Besuch automatisch zeigen
 }
 function stopVideo() { const f = $("#videoFrame"); if (f) f.innerHTML = ""; }
 function openVideo(id) {
@@ -843,18 +985,28 @@ function markRead(id) {
 }
 
 /* =====================================================================
-   RADIO – Transkript bauen & mit der Sprachausgabe des Browsers vorlesen
+   RADIO – Transkript bauen und abspielen
+   · Neural-Stimme: vorab eingesprochene MP3s (news.json → radio.audio)
+   · sonst: Sprachausgabe des Browsers (Web Speech API)
    ===================================================================== */
+const NEURAL = "neural";
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const fmtDur = sec => { sec = Math.max(0, Math.round(sec)); return `${Math.floor(sec / 60)}:${pad(sec % 60)}`; };
+
 const Radio = {
   segments: null, flat: [], idx: 0, playing: false, gen: 0, voices: [], ctx: null, built: null,
+  audio: null, audioSeg: -1, seekPending: true,
   get synth() { return window.speechSynthesis; },
+  get audioData() { const a = DATA?.radio?.audio; return a && a.parts && a.parts.intro ? a : null; },
+  get neural() { return !!this.audioData && (!S.voice || S.voice === NEURAL); },
+  curSeg() { const c = this.flat[this.idx]; return c ? this.segments[c.seg] : null; },
 
   invalidate() { if (!this.playing) { this.segments = null; this.idx = 0; } },
 
   pick(arr, seed) { return arr[Math.abs(seed) % arr.length]; },
 
   sentences(text, lang = "de") {
-    // nur an Satzenden mit Leerzeichen + Grossbuchstabe/Anführungszeichen teilen (also nicht bei "6.18" oder "10,75")
+    // nur an Satzenden mit Leerzeichen + Grossbuchstabe teilen (also nicht bei "6.18" oder "10,75")
     const parts = String(text).replace(/\s+/g, " ").trim().split(/(?<=[.!?…]["“”»«']?)\s+(?=["„“«(]?[A-ZÄÖÜÀ-Ý0-9])/);
     const out = [];
     for (let p of parts) {
@@ -866,6 +1018,14 @@ const Radio = {
       if (p.length > 1) out.push({ text: p, lang });
     }
     return out;
+  },
+
+  // Abkürzungen & Zeichen so umschreiben, dass Browser-Stimmen sie sauber sprechen
+  spoken(t) {
+    return t.replace(/\bz\.\s?B\./g, "zum Beispiel").replace(/\bu\.\s?a\./g, "unter anderem").replace(/\bd\.\s?h\./g, "das heisst")
+      .replace(/\bbzw\./g, "beziehungsweise").replace(/\bca\./g, "circa").replace(/\bMio\./g, "Millionen").replace(/\bMrd\./g, "Milliarden")
+      .replace(/(\d)\s?%/g, "$1 Prozent").replace(/\s&\s/g, " und ").replace(/\bCHF\b/g, "Franken").replace(/\bUSD\b/g, "Dollar")
+      .replace(/[–—]/g, ", ").replace(/[«»„“”"]/g, "").replace(/\s+,/g, ",").replace(/\s{2,}/g, " ").trim();
   },
 
   storyChunks(a, k) {
@@ -882,12 +1042,47 @@ const Radio = {
     }
     const sum = a.summaryDe || (a.lang === "de" ? a.summary : "");
     if (sum) chunks.push(...this.sentences(sum.replace(/\s*…$/, ".").split(/(?<=[.!?])\s/).slice(0, 2).join(" "), "de"));
+    if (chunks[0]) chunks[0].gap = 450;     // kleine Atempause vor jeder neuen Meldung
     return chunks;
   },
 
-  build() {
-    const len = S.length;
+  // Ohne gewählte Interessen: die Themen der Top-Meldungen
+  topicsForRadio() {
     const ints = myInterests().filter(id => topicById.has(id));
+    if (ints.length) return { ids: ints, personal: true };
+    const ids = [...new Set((DATA.top || []).map(id => byId.get(id)?.topic).filter(Boolean))].slice(0, 3);
+    return { ids, personal: false };
+  },
+
+  build() {
+    const { ids, personal } = this.topicsForRadio();
+    this.segments = (this.neural ? this.buildNeural(ids, personal) : this.buildBrowser(ids, personal)).filter(s => s.chunks.length);
+    this.flat = [];
+    this.segments.forEach((s, si) => {
+      const total = s.chunks.reduce((n, c) => n + c.text.length + 1, 0) || 1;
+      let pos = 0;
+      s.chunks.forEach(c => { c.start = pos / total; pos += c.text.length + 1; c.end = pos / total; this.flat.push({ ...c, seg: si }); });
+    });
+    this.idx = 0; this.audioSeg = -1; this.seekPending = true;
+    this.built = this.key();
+  },
+
+  buildNeural(ids, personal) {
+    const P = this.audioData.parts, segs = [];
+    const add = (id, label) => {
+      const p = P[id];
+      if (!p || !/^audio\/[\w.-]+\.mp3$/.test(p.file || "")) return;
+      segs.push({ id, label: label || p.label, file: p.file, dur: +p.dur || 0, ai: !!p.ai, chunks: this.sentences(p.text) });
+    };
+    add("intro", "Intro");
+    if (S.length !== "kurz" || !personal) add("overview", "Überblick");
+    ids.forEach(id => add(id, topicById.get(id)?.label.split(" · ")[0]));
+    add("outro", "Outro");
+    return segs;
+  },
+
+  buildBrowser(ints, personal) {
+    const len = S.length;
     const R = DATA.radio || {};
     const now = new Date(), hr = now.getHours();
     const greet = hr < 11 ? "Guten Morgen" : hr < 17 ? "Guten Tag" : "Guten Abend";
@@ -895,16 +1090,17 @@ const Radio = {
     const list = labels.length > 4 ? `deinen ${labels.length} Themen, darunter ${labels.slice(0, 2).join(", ")} und ${labels[2]}`
       : labels.length > 1 ? labels.slice(0, -1).join(", ") + " und " + labels.at(-1) : (labels[0] || "aller Welt");
     const segs = [];
-    const per = { kurz: 2, normal: 3, lang: 5 }[len];
+    const per = { kurz: 2, normal: 3, lang: 5 }[len] || 3;
     const used = new Set();
 
     segs.push({ id: "intro", label: "Intro", chunks: this.sentences(
       `${greet} und willkommen beim ${showName()}. Heute ist ${fmtDate(now)}. ` +
-      `Ich habe die wichtigsten Meldungen aus ${list} für dich zusammengestellt` +
-      (S.keywords.length ? `, dazu alles zu deinen Stichworten ${S.keywords.join(", ")}` : "") +
-      `. Stand der Nachrichten: ${fmtTime(DATA.generated)} Uhr.`) });
+      (personal ? `Ich habe die wichtigsten Meldungen aus ${list} für dich zusammengestellt` +
+        (S.keywords.length ? `, dazu alles zu deinen Stichworten ${S.keywords.join(", ")}` : "") + ". "
+        : `Du hast noch keine Interessen gewählt. Darum hörst du heute die grössten Themen des Tages. `) +
+      `Stand der Nachrichten: ${fmtTime(DATA.generated)} Uhr.`) });
 
-    if (len !== "kurz") {
+    if (len !== "kurz" || !personal) {
       if (R.overview) segs.push({ id: "overview", label: "Überblick", chunks: [{ text: "Zuerst die wichtigsten Schlagzeilen im Überblick.", lang: "de" }, ...this.sentences(R.overview)] });
       else {
         const top = (DATA.top || []).map(id => byId.get(id)).filter(Boolean).slice(0, 3);
@@ -927,14 +1123,14 @@ const Radio = {
         arts.slice(0, 5).forEach(a => used.add(a.id));
         if (len === "lang") {
           const more = arts.slice(5, 8);
-          if (more.length) { ch.push({ text: `Weitere Schlagzeilen aus ${label}.`, lang: "de" }); more.forEach((a, k) => ch.push(...this.storyChunks(a, k + 2))); }
+          if (more.length) { ch.push({ text: `Weitere Schlagzeilen aus ${label}.`, lang: "de", gap: 450 }); more.forEach((a, k) => ch.push(...this.storyChunks(a, k + 2))); }
         }
       } else {
         const opener = n === 0 ? `Wir starten mit ${label}.` : this.pick([`Weiter geht's mit ${label}.`, `Jetzt zu ${label}.`, `Kommen wir zu ${label}.`, `Und nun: ${label}.`], n);
         ch.push({ text: opener, lang: "de" });
         arts.slice(0, per).forEach((a, k) => { used.add(a.id); ch.push(...this.storyChunks(a, n + k)); });
       }
-      segs.push({ id, label: t.label.split(" · ")[0], chunks: ch });
+      segs.push({ id, label: t.label.split(" · ")[0], ai: !!R.segments?.[id], chunks: ch });
     });
 
     if (S.keywords.length) {
@@ -948,19 +1144,12 @@ const Radio = {
 
     segs.push({ id: "outro", label: "Outro", chunks: this.sentences(
       `Das war das ${showName()} für ${now.toLocaleDateString("de-CH", { weekday: "long" })}. ` +
-      `Alle Artikel und Videos findest du auf news punkt studer punkt website. Bis zum nächsten Mal!`) });
-
-    this.segments = segs;
-    this.flat = [];
-    segs.forEach((s, si) => s.chunks.forEach(c => this.flat.push({ ...c, seg: si })));
-    this.idx = 0;
-    this.built = JSON.stringify([S.length, S.origLang, ints, S.keywords, DATA.generated]);
+      `Alle Artikel und Videos findest du auf ${(DATA.site?.domain || "der Website").split(".").join(" punkt ")}. Bis zum nächsten Mal!`) });
+    return segs;
   },
 
-  ensure() {
-    const key = JSON.stringify([S.length, S.origLang, myInterests(), S.keywords, DATA.generated]);
-    if (!this.segments || (!this.playing && this.built !== key)) this.build();
-  },
+  key() { return JSON.stringify([this.neural, S.length, S.origLang, myInterests(), S.keywords, DATA.generated]); },
+  ensure() { if (!this.segments || (!this.playing && this.built !== this.key())) this.build(); },
 
   transcriptText() {
     this.ensure();
@@ -968,64 +1157,142 @@ const Radio = {
     return head + this.segments.map(s => `[${s.label.toUpperCase()}]\n${s.chunks.map(c => c.text).join(" ")}`).join("\n\n") + "\n";
   },
 
-  /* --- Stimmen --- */
+  /* --- Browser-Stimmen --- */
+  NATURAL: /natural|neural|online|premium|enhanced|wavenet|studio/i,
   loadVoices() { this.voices = this.synth ? this.synth.getVoices() : []; },
   rank(v, lang) {
-    let s = 0;
-    if (v.lang.toLowerCase().replace("_", "-").startsWith(lang)) s += 10; else return -1;
-    if (/natural|online|neural|premium|enhanced/i.test(v.name)) s += 5;
+    const vl = v.lang.toLowerCase().replace("_", "-");
+    if (!vl.startsWith(lang)) return -1;
+    let s = 10;
+    if (this.NATURAL.test(v.name)) s += 8;
+    if (/siri/i.test(v.name)) s += 4;
     if (/google/i.test(v.name)) s += 3;
-    if (lang === "de" && /de-ch/i.test(v.lang)) s += 2;
-    if (lang === "pt" && /pt-br/i.test(v.lang)) s += 2;
+    if (/compact|espeak/i.test(v.name)) s -= 6;
+    if (lang === "de" && vl === "de-ch") s += 2;
+    if (lang === "pt" && vl === "pt-br") s += 2;
     if (v.localService === false) s += 1;
     return s;
   },
   voiceFor(lang) {
-    if (lang === "de" && S.voice) { const v = this.voices.find(x => x.name === S.voice); if (v) return v; }
+    if (lang === "de" && S.voice && S.voice !== NEURAL) { const v = this.voices.find(x => x.name === S.voice); if (v) return v; }
     let best = null, bs = -1;
     for (const v of this.voices) { const r = this.rank(v, lang); if (r > bs) { bs = r; best = v; } }
     return best || (lang !== "de" ? this.voiceFor("de") : null);
   },
+  hasNaturalVoice() { return this.voices.some(v => v.lang.toLowerCase().startsWith("de") && this.NATURAL.test(v.name)); },
 
   /* --- Wiedergabe --- */
   play() {
-    if (!this.synth) { toast("Dein Browser unterstützt <b>keine Sprachausgabe</b>"); return; }
     if (!this.segments) this.build();
-    if (this.idx >= this.flat.length) this.idx = 0;
+    if (this.idx >= this.flat.length) { this.idx = 0; this.seekPending = true; }
+    if (!this.curSeg()?.file && !this.synth) { toast("Dein Browser unterstützt <b>keine Sprachausgabe</b>"); return; }
     this.playing = true;
     this.unlockAudio();
     this.speakCurrent(true);
     this.ui();
   },
-  pause() { this.playing = false; this.gen++; this.synth?.cancel(); this.ui(); },
-  stop() { this.pause(); this.idx = 0; this.ui(); },
+  pause() { this.playing = false; this.gen++; this.synth?.cancel(); this.audio?.pause(); this.ui(); },
+  stop() { this.pause(); this.idx = 0; this.seekPending = true; this.ui(); },
   toggle() { this.playing ? this.pause() : this.play(); },
-  jump(i) { this.gen++; this.synth?.cancel(); this.idx = Math.max(0, Math.min(i, this.flat.length - 1)); if (this.playing) this.speakCurrent(); this.ui(); },
+  jump(i) {
+    this.gen++; this.synth?.cancel();
+    this.idx = Math.max(0, Math.min(i, this.flat.length - 1)); this.seekPending = true;
+    if (this.playing) this.speakCurrent(); else this.audio?.pause();
+    this.ui();
+  },
+  segStart(s) { return this.flat.findIndex(c => c.seg === s); },
   nextSeg() { const s = this.flat[this.idx]?.seg ?? 0; const i = this.flat.findIndex(c => c.seg > s); if (i >= 0) this.jump(i); },
   prevSeg() {
-    const s = this.flat[this.idx]?.seg ?? 0;
-    const start = this.flat.findIndex(c => c.seg === s);
-    const target = (this.idx - start > 1 || s === 0) ? s : s - 1;
-    this.jump(this.flat.findIndex(c => c.seg === target));
+    const s = this.flat[this.idx]?.seg ?? 0, seg = this.segments[s];
+    const intoSeg = seg?.file && this.audioSeg === s && this.audio ? this.audio.currentTime > 3 : this.idx - this.segStart(s) > 1;
+    this.jump(this.segStart(intoSeg || s === 0 ? s : s - 1));
+  },
+  finish() {
+    this.playing = false; this.idx = 0; this.audioSeg = -1; this.seekPending = true;
+    this.audio?.pause(); this.ui(); toast("Briefing beendet <b>✓</b>");
   },
   async speakCurrent(first = false) {
     const my = ++this.gen;
-    this.synth.cancel();
+    this.synth?.cancel();
     const c = this.flat[this.idx];
-    if (!c) { this.playing = false; this.idx = 0; this.ui(); toast("Briefing beendet <b>✓</b>"); return; }
+    if (!c) return this.finish();
+    const seg = this.segments[c.seg];
     const segStart = this.idx === 0 || this.flat[this.idx - 1].seg !== c.seg;
+
+    if (seg.file) {                                         // ── Neural-Stimme (MP3)
+      if (this.audioSeg !== c.seg) {
+        this.audio?.pause();
+        if (S.jingle && !first && c.seg > 0 && segStart) { await this.jingle(); if (my !== this.gen) return; }
+      }
+      return this.playAudio(seg, c, my);
+    }
+
+    this.audio?.pause(); this.audioSeg = -1;               // ── Browser-Stimme
     if (segStart && S.jingle && !first && c.seg > 0) { await this.jingle(); if (my !== this.gen) return; }
-    await new Promise(r => setTimeout(r, 60));               // Chrome braucht kurz Luft nach cancel()
+    await wait(first ? 60 : (c.gap || (segStart ? 500 : 160)));   // natürliche Pausen zwischen den Sätzen
     if (my !== this.gen) return;
-    const u = new SpeechSynthesisUtterance(c.text);
+    const u = new SpeechSynthesisUtterance(c.lang === "de" ? this.spoken(c.text) : c.text);
     const v = this.voiceFor(c.lang || "de");
     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = c.lang === "pt" ? "pt-BR" : c.lang === "en" ? "en-US" : "de-CH";
-    u.rate = S.speed; u.pitch = 1;
+    u.rate = S.speed * (this.NATURAL.test(v?.name || "") ? 1 : .96); u.pitch = 1;
     u.onend = () => { if (my !== this.gen || !this.playing) return; this.idx++; this.ui(); this.speakCurrent(); };
     u.onerror = e => { if (my !== this.gen || !this.playing) return; if (e.error === "interrupted" || e.error === "canceled") return; this.idx++; this.speakCurrent(); };
     this.synth.speak(u);
     this.ui();
   },
+
+  makeAudio() {
+    const a = new Audio();
+    a.preload = "auto";
+    a.addEventListener("timeupdate", () => this.onTime());
+    a.addEventListener("ended", () => { if (this.playing) this.advanceSeg(); });
+    a.addEventListener("error", () => {
+      if (!this.playing || this.audioSeg < 0) return;
+      toast("Audio konnte nicht geladen werden – <b>nächste Rubrik</b>");
+      this.advanceSeg();
+    });
+    return a;
+  },
+  advanceSeg() {
+    const s = this.flat[this.idx]?.seg ?? -1;
+    const next = this.flat.findIndex(c => c.seg > s);
+    this.idx = next < 0 ? this.flat.length : next;
+    this.seekPending = false;
+    this.speakCurrent();
+  },
+  async playAudio(seg, c, my) {
+    const a = this.audio ||= this.makeAudio();
+    let fresh = false;
+    if (this.audioSeg !== c.seg) {
+      a.src = seg.file;
+      this.audioSeg = c.seg; fresh = true;
+      if (c.start > 0) this.seekPending = true;
+    }
+    // nach neuem src erst auf die Metadaten warten, sonst geht der Sprung verloren
+    if (this.seekPending && c.start > 0 && (fresh || !(a.duration > 0) || a.readyState < 1)) {
+      await new Promise(r => { a.addEventListener("loadedmetadata", r, { once: true }); a.addEventListener("error", r, { once: true }); });
+      if (my !== this.gen) return;
+    }
+    if (this.seekPending) { if (a.duration > 0) a.currentTime = c.start * a.duration; else if (c.start === 0) try { a.currentTime = 0; } catch (e) {} }
+    this.seekPending = false;
+    a.playbackRate = S.speed;
+    try { await a.play(); }
+    catch (e) {
+      if (my !== this.gen) return;
+      if (e.name === "NotAllowedError") { this.playing = false; this.ui(); toast("Tippe nochmals auf <b>▶</b>"); return; }
+      if (e.name !== "AbortError") this.advanceSeg();
+    }
+    this.ui();
+  },
+  onTime() {
+    const a = this.audio;
+    if (!this.playing || this.audioSeg < 0 || !(a.duration > 0)) return;
+    const frac = a.currentTime / a.duration, s = this.audioSeg;
+    let i = this.flat.findIndex(c => c.seg === s && frac < c.end);
+    if (i < 0) i = this.flat.findLastIndex(c => c.seg === s);
+    if (i !== this.idx && i >= 0) { this.idx = i; this.ui(); } else this.uiProgress();
+  },
+
   unlockAudio() {
     try { this.ctx ||= new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === "suspended") this.ctx.resume(); } catch (e) {}
   },
@@ -1046,13 +1313,28 @@ const Radio = {
   },
 
   /* --- UI --- */
+  totalDur() { return this.segments?.reduce((n, s) => n + (s.dur || 0), 0) || 0; },
+  progressPct() {
+    const cur = this.flat[this.idx]; if (!cur) return 0;
+    const seg = this.segments[cur.seg], total = this.totalDur();
+    if (seg.file && total) {
+      const before = this.segments.slice(0, cur.seg).reduce((n, s) => n + (s.dur || 0), 0);
+      const a = this.audio, inSeg = (a && this.audioSeg === cur.seg && a.duration > 0) ? a.currentTime / a.duration : cur.start;
+      return Math.min(100, (before + inSeg * (seg.dur || 0)) / total * 100);
+    }
+    return this.flat.length ? (this.idx / this.flat.length) * 100 : 0;
+  },
+  uiProgress() { const p = $("#progress"); if (p) p.style.width = this.progressPct() + "%"; },
   ui() {
     const playing = this.playing, cur = this.flat[this.idx], seg = cur && this.segments?.[cur.seg];
     $$('[data-radio="toggle"]').forEach(b => { b.textContent = playing ? "❚❚" : "▶"; b.setAttribute("aria-label", playing ? "Pausieren" : "Abspielen"); });
     const mp = $("#miniPlayer");
     const onRadio = (location.hash || "").startsWith("#/radio");
     mp.classList.toggle("show", !!this.segments && (playing || this.idx > 0) && !onRadio);
-    if (seg) { $("#miniTitle").textContent = seg.label; $("#miniSub").textContent = `${showName()} · ${this.idx + 1}/${this.flat.length}`; }
+    if (seg) { $("#miniTitle").textContent = seg.label; $("#miniSub").textContent = `${showName()} · ${cur.seg + 1}/${this.segments.length}`; }
+    if ("mediaSession" in navigator && seg) {
+      try { navigator.mediaSession.metadata = new MediaMetadata({ title: seg.label, artist: showName(), album: fmtDate() }); } catch (e) {}
+    }
     if (!onRadio) return;
     $("#onair")?.classList.toggle("live", playing);
     if ($("#onair")) $("#onair").textContent = playing ? "● ON AIR" : "OFF AIR";
@@ -1061,8 +1343,7 @@ const Radio = {
       $("#deckTitle").textContent = seg.label;
       $("#deckSub").textContent = `SEGMENT ${pad(cur.seg + 1)}/${pad(this.segments.length)} · SATZ ${this.idx + 1}/${this.flat.length}`;
     }
-    const p = this.flat.length ? (this.idx / this.flat.length) * 100 : 0;
-    $("#progress") && ($("#progress").style.width = p + "%");
+    this.uiProgress();
     $$("#chapters button").forEach(b => b.classList.toggle("on", +b.dataset.seg === cur?.seg));
     const ts = $$("#transcript s");
     ts.forEach((el, i) => { el.classList.toggle("cur", i === this.idx && (playing || this.idx > 0)); el.classList.toggle("done", i < this.idx); });
@@ -1071,29 +1352,38 @@ const Radio = {
       const box = $("#transcript"), top = el.offsetTop - box.offsetTop;
       if (top < box.scrollTop + 40 || top > box.scrollTop + box.clientHeight - 80) box.scrollTo({ top: top - box.clientHeight / 3, behavior: "smooth" });
     }
-    if ("mediaSession" in navigator && seg) {
-      try { navigator.mediaSession.metadata = new MediaMetadata({ title: seg.label, artist: showName(), album: fmtDate() }); } catch (e) {}
-    }
   },
 
   render() {
     this.ensure();
-    const supported = !!this.synth;
-    const deVoices = this.voices.filter(v => v.lang.toLowerCase().startsWith("de"));
+    const A = this.audioData, neural = this.neural;
+    const supported = !!this.synth || !!A;
+    const deVoices = this.voices.filter(v => v.lang.toLowerCase().startsWith("de"))
+      .sort((a, b) => this.rank(b, "de") - this.rank(a, "de"));
     const curVoice = this.voiceFor("de");
+    const personal = this.topicsForRadio().personal;
     let k = -1;
     const transcript = this.segments.map((s, si) => `<div class="seg-h">SEGMENT ${pad(si + 1)} / ${h(s.label.toUpperCase())}</div>` +
       s.chunks.map(c => { k++; return `<s data-i="${k}"${c.lang !== "de" ? ` lang="${h(c.lang)}" data-l="${h(c.lang.toUpperCase())}"` : ""}>${h(c.text)}</s> `; }).join("")).join("");
-    const mins = Math.max(1, Math.round(this.flat.reduce((n, c) => n + c.text.split(" ").length, 0) / (150 * S.speed)));
+    const total = this.totalDur();
+    const mins = Math.max(1, Math.round(total ? total / 60 / S.speed : this.flat.reduce((n, c) => n + c.text.split(" ").length, 0) / (150 * S.speed)));
+    const aiCount = this.segments.filter(s => s.ai).length;
+    const voiceOpts = (A ? `<option value="${NEURAL}" ${neural ? "selected" : ""}>★ ${h(A.label || "Neural")} · Neural</option>` : "") +
+      (deVoices.length ? `<optgroup label="Browser-Stimmen">${deVoices.map(v => `<option value="${h(v.name)}" ${!neural && curVoice && v.name === curVoice.name ? "selected" : ""}>${h(v.name.replace(/^Microsoft /, "").replace(/ - .*$/, ""))} (${h(v.lang)})</option>`).join("")}</optgroup>`
+        : (A ? "" : `<option>${this.synth ? "Standardstimme" : "–"}</option>`));
+    const hint = neural ? "Echte Neural-Stimme, beim Update eingesprochen. Läuft auch bei gesperrtem Handy weiter."
+      : A ? "Browser-Stimme: passt sich deinen Stichworten an, klingt aber künstlicher."
+      : this.hasNaturalVoice() ? "Natürliche Browser-Stimme aktiv." : "Tipp: In Microsoft Edge gibt es natürliche Stimmen (z.B. „Online (Natural)“).";
     view.innerHTML = `<section class="section">${sectionHead("04", "Radio", "Dein Briefing <span>zum Hören.</span>",
-      `Ein Nachrichten-Podcast aus deinen Interessen – vorgelesen von deinem Browser. ${DATA.ai?.used && DATA.radio?.segments && Object.keys(DATA.radio.segments).length ? "Moderation von der KI geschrieben." : "Moderation automatisch aus den Schlagzeilen gebaut."}`)}
-    ${supported ? "" : `<div class="empty" style="margin-bottom:16px"><h3>Keine Sprachausgabe verfügbar</h3><p>Dein Browser unterstützt die Web Speech API nicht. Du kannst das Transkript trotzdem lesen, kopieren oder herunterladen. Tipp: Edge oder Chrome verwenden.</p></div>`}
+      `Ein Nachrichten-Podcast aus deinen Interessen – ${neural ? `gesprochen von ${h(A.label || "einer Neural-Stimme")}` : "vorgelesen von deinem Browser"}. ${aiCount ? "Moderation von der KI geschrieben." : "Moderation automatisch aus den Schlagzeilen gebaut."}`)}
+    ${supported ? "" : `<div class="empty" style="margin-bottom:16px"><h3>Keine Sprachausgabe verfügbar</h3><p>Dein Browser unterstützt keine Sprachausgabe. Du kannst das Transkript trotzdem lesen, kopieren oder herunterladen.</p></div>`}
+    ${personal ? "" : `<div class="notice"><span>Du hast noch keine Interessen gewählt – das Briefing nimmt die Top-Themen des Tages.</span><button class="button small" data-action="interests">Interessen wählen ↗</button></div>`}
     <div class="radio-grid">
       <div class="terminal-window">
         <div class="terminal-bar"><span class="d1">●</span><span class="d2">●</span><span class="d3">●</span><b>radio@studer:~</b><span class="right"><span class="onair" id="onair">OFF AIR</span></span></div>
         <div class="deck">
           <p class="now">Jetzt</p>
-          <h3 id="deckTitle">${h(this.segments[this.flat[this.idx]?.seg ?? 0]?.label || "Intro")}</h3>
+          <h3 id="deckTitle">${h(this.curSeg()?.label || "Intro")}</h3>
           <p class="sub" id="deckSub">${this.segments.length} SEGMENTE · ${this.flat.length} SÄTZE · CA. ${mins} MIN</p>
           <div class="eq" id="eq">${Array.from({ length: 34 }, (_, i) => `<span style="animation-delay:${(i * 137 % 1000) / 1000}s;animation-duration:${.6 + (i * 53 % 70) / 100}s"></span>`).join("")}</div>
           <div class="progress"><i id="progress"></i></div>
@@ -1104,16 +1394,16 @@ const Radio = {
             <button class="ctrl" data-radio="stop" aria-label="Stop" title="Stop">■</button>
           </div>
           <div class="settings">
+            <div class="setrow"><span>STIMME</span><select id="voiceSel" aria-label="Stimme">${voiceOpts}</select></div>
+            <p class="voice-hint ${neural ? "good" : ""}">${h(hint)}</p>
             <div class="setrow"><span>LÄNGE</span><div class="seg">${[["kurz", "KURZ"], ["normal", "NORMAL"], ["lang", "LANG"]].map(([v, l]) => `<button data-len="${v}" class="${S.length === v ? "on" : ""}">${l}</button>`).join("")}</div></div>
-            <div class="setrow"><span>STIMME</span><select id="voiceSel" aria-label="Stimme">${deVoices.length ? deVoices.map(v => `<option value="${h(v.name)}" ${curVoice && v.name === curVoice.name ? "selected" : ""}>${h(v.name.replace(/^Microsoft /, ""))} (${h(v.lang)})</option>`).join("") : `<option>${supported ? "Standardstimme" : "–"}</option>`}</select></div>
             <div class="setrow"><span>TEMPO</span><select id="speedSel" aria-label="Tempo">${[0.85, 0.95, 1, 1.1, 1.2, 1.35, 1.5].map(s => `<option value="${s}" ${+S.speed === s ? "selected" : ""}>${s.toFixed(2)}×</option>`).join("")}</select></div>
-            <div class="setrow"><span>FREMDSPRACHEN IM ORIGINAL</span><label class="toggle"><input type="checkbox" id="origSel" ${S.origLang ? "checked" : ""}><span></span></label></div>
+            ${neural ? "" : `<div class="setrow"><span>FREMDSPRACHEN IM ORIGINAL</span><label class="toggle"><input type="checkbox" id="origSel" ${S.origLang ? "checked" : ""}><span></span></label></div>`}
             <div class="setrow"><span>JINGLE ZWISCHEN RUBRIKEN</span><label class="toggle"><input type="checkbox" id="jingleSel" ${S.jingle ? "checked" : ""}><span></span></label></div>
           </div>
         </div>
         <div class="chapters" id="chapters"><p class="kicker" style="margin-bottom:8px">Kapitel</p>${this.segments.map((s, si) => {
-          const start = this.flat.findIndex(c => c.seg === si);
-          return `<button data-seg="${si}" data-jump="${start}"><span>${pad(si + 1)} · ${h(s.label)}</span><span>${s.chunks.length} SÄTZE</span></button>`; }).join("")}</div>
+          return `<button data-seg="${si}" data-jump="${this.segStart(si)}"><span>${pad(si + 1)} · ${h(s.label)}</span><span>${s.dur ? fmtDur(s.dur / S.speed) : `${s.chunks.length} SÄTZE`}</span></button>`; }).join("")}</div>
         <span class="scanline"></span>
       </div>
       <div class="terminal-window">
@@ -1129,13 +1419,13 @@ const Radio = {
   }
 };
 
-/* ---------- Einzelnen Artikel vorlesen ---------- */
+/* ---------- Einzelnen Artikel vorlesen (immer Browser-Stimme) ---------- */
 function listenOne(id) {
   const a = byId.get(id) || S.saved[id]; if (!a || !Radio.synth) return;
   Radio.pause();
   Radio.segments = [{ id: "one", label: (titleOf(a) || "").slice(0, 60), chunks: Radio.storyChunks(a, 0) }];
-  Radio.flat = Radio.segments[0].chunks.map(c => ({ ...c, seg: 0 }));
-  Radio.idx = 0; Radio.built = "single";
+  Radio.flat = Radio.segments[0].chunks.map((c, i, arr) => ({ ...c, start: i / arr.length, end: (i + 1) / arr.length, seg: 0 }));
+  Radio.idx = 0; Radio.audioSeg = -1; Radio.built = "single";
   Radio.play();
 }
 
@@ -1150,11 +1440,21 @@ document.addEventListener("click", e => {
   if ((x = el("[data-save]"))) return toggleSave(x.dataset.save);
   if ((x = el("[data-listen]"))) return listenOne(x.dataset.listen);
   if ((x = el("[data-video]"))) return openVideo(x.dataset.video);
+  if ((x = el("[data-lcountry]"))) { S.liveCountry = x.dataset.lcountry; save(); return renderLive(); }
+  if ((x = el("[data-live]"))) {
+    S.liveChannel = x.dataset.live; save();
+    const keep = $(".live-grid")?.scrollTop || 0;
+    renderLive(); playLive();
+    const g = $(".live-grid"); if (g) g.scrollTop = keep;
+    if (matchMedia("(max-width:940px)").matches) $("#livePlayer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
   if ((x = el("[data-vfilter]"))) { videoFilter = x.dataset.vfilter; return renderVideos(); }
   if ((x = el("[data-sort]"))) { S.sort = x.dataset.sort; save(); return rerender(); }
   if ((x = el("[data-int]"))) { const id = x.dataset.int; draft.interests.has(id) ? draft.interests.delete(id) : draft.interests.add(id); return drawInterests(); }
   if ((x = el("[data-intgroup]"))) {
-    const ts = DATA.topics.filter(tp => (tp.group || "Weitere") === x.dataset.intgroup);
+    const q = norm($("#intFilter").value.trim());
+    const ts = DATA.topics.filter(tp => (tp.group || "Weitere") === x.dataset.intgroup && (!q || norm(`${tp.label} ${tp.description || ""} ${tp.group || ""}`).includes(q)));
     const all = ts.every(tp => draft.interests.has(tp.id));
     ts.forEach(tp => all ? draft.interests.delete(tp.id) : draft.interests.add(tp.id));
     return drawInterests();
@@ -1172,8 +1472,10 @@ document.addEventListener("click", e => {
   if ((x = el("[data-action]"))) {
     switch (x.dataset.action) {
       case "interests": return openInterests();
+      case "live-play": return playLive();
+      case "live-reload": liveAlt = !liveAlt; return playLive(liveAlt);
       case "sources": return openSources();
-      case "play-briefing": Radio.stop(); Radio.build(); go("#/radio"); return setTimeout(() => Radio.play(), 80);
+      case "play-briefing": Radio.stop(); Radio.build(); Radio.play(); return go("#/radio");   // play() direkt im Klick (wichtig für iPhone)
       case "rebuild": Radio.stop(); Radio.build(); Radio.render(); return toast("Transkript <b>neu erstellt</b>");
       case "copy-transcript":
         navigator.clipboard?.writeText(Radio.transcriptText()).then(() => toast("Transkript <b>kopiert</b>"), () => toast("Kopieren nicht möglich"));
@@ -1190,8 +1492,16 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const id = e.target.id;
-  if (id === "voiceSel") { S.voice = e.target.value; save(); if (Radio.playing) Radio.jump(Radio.idx); }
-  if (id === "speedSel") { S.speed = +e.target.value; save(); if (Radio.playing) Radio.jump(Radio.idx); }
+  if (id === "voiceSel") {
+    const was = Radio.neural; S.voice = e.target.value; save();
+    if (was !== Radio.neural) { Radio.stop(); Radio.build(); Radio.render(); }
+    else if (Radio.playing && !Radio.curSeg()?.file) Radio.jump(Radio.idx);
+  }
+  if (id === "speedSel") {
+    S.speed = +e.target.value; save();
+    if (Radio.audio) Radio.audio.playbackRate = S.speed;
+    if (Radio.playing && !Radio.curSeg()?.file) Radio.jump(Radio.idx);
+  }
   if (id === "origSel") { S.origLang = e.target.checked; save(); Radio.stop(); Radio.build(); Radio.render(); }
   if (id === "jingleSel") { S.jingle = e.target.checked; save(); }
 });
@@ -1206,6 +1516,7 @@ document.addEventListener("keydown", e => {
   const typing = /input|textarea|select/i.test(document.activeElement?.tagName);
   if (e.key === "/" && !typing) { e.preventDefault(); $("#searchInput").focus(); }
   if (e.key === "Enter" && e.target.id === "kwInput") { e.preventDefault(); addKeyword(); }
+  if (e.key === "Enter" && e.target.id === "intFilter") e.preventDefault();
   if (e.key === " " && !typing && (location.hash || "").startsWith("#/radio")) { e.preventDefault(); Radio.toggle(); }
 });
 let searchTimer;
@@ -1215,6 +1526,8 @@ $("#searchInput").addEventListener("input", e => {
   searchTimer = setTimeout(() => { if (q.length >= 2) { history.replaceState(null, "", `#/suche/${encodeURIComponent(q)}`); route(); } else if (!q && location.hash.startsWith("#/suche")) go("#/fuer-dich"); }, 220);
 });
 $("#kwAdd").addEventListener("click", addKeyword);
+$("#intFilter").addEventListener("input", () => drawInterests());
+$("#intClear").addEventListener("click", () => { draft.interests.clear(); draft.keywords = []; drawInterests(); });
 $("#intSave").addEventListener("click", saveInterests);
 $("#menuBtn").addEventListener("click", () => $("#mainNav").classList.toggle("open"));
 addEventListener("hashchange", () => { route(); Radio.ui(); });
@@ -1250,8 +1563,9 @@ addEventListener("beforeunload", () => window.speechSynthesis?.cancel());
   if (site.domain) $("#siteDomain").textContent = site.domain.replace(/^[^.]+\./, "");
   $("#footName").textContent = name;
   $("#footGen").textContent = `SYNC ${new Date(DATA.generated).toLocaleString("de-CH", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}`;
+  $("#livePip").hidden = !(DATA.live || []).some(l => l.live);
   route();
-  if (!S.interests) setTimeout(openInterests, 400);
+  if (!S.onboarded) setTimeout(openInterests, 400);
 })();
 </script>
 </body>

@@ -20,13 +20,58 @@
     "model": "openai/gpt-4o-mini",
     "translate": true,
     "radio": true,
-    "maxTranslatePerTopic": 10,
+    "maxTranslatePerTopic": 8,
     "segmentWords": 130,
     "maxCallsPerRun": 45,
-    "secondsBetweenCalls": 4.5
+    "secondsBetweenCalls": 4.5,
+    "radioBatch": 5
   },
 
-  "defaultInterests": ["gaming", "brasil", "cyber"],
+  "tts": {
+    "enabled": true,
+    "voice": "de-CH-LeniNeural",
+    "label": "Leni (CH)",
+    "rate": "+5%",
+    "pitch": "+0Hz"
+  },
+
+  "schedule": {
+    "times": ["05:00", "12:00"],
+    "timezone": "Europe/Zurich",
+    "windowHours": 3
+  },
+
+  "liveCountries": {"BR": "Brasilien", "CH": "Schweiz", "DE": "Deutschland", "INT": "International", "GB": "Grossbritannien", "US": "USA", "FR": "Frankreich", "IT": "Italien", "LATAM": "Lateinamerika", "ASIA": "Asien", "SPACE": "Weltraum"},
+
+  "live": [
+    { "id": "cnnbrasil", "name": "CNN Brasil", "country": "BR", "handle": "@CNNbrasil", "lang": "pt" },
+    { "id": "jovempan", "name": "Jovem Pan News", "country": "BR", "handle": "@jovempannews", "lang": "pt" },
+    { "id": "sbtnews", "name": "SBT News", "country": "BR", "handle": "@SBTNews", "lang": "pt" },
+    { "id": "recordnews", "name": "Record News", "country": "BR", "handle": "@recordnews", "lang": "pt" },
+    { "id": "srf", "name": "SRF News", "country": "CH", "handle": "@srfnews", "lang": "de", "note": "live bei Sondersendungen" },
+    { "id": "welt", "name": "WELT Nachrichtensender", "country": "DE", "handle": "@WELTVideoTV", "lang": "de" },
+    { "id": "ntv", "name": "ntv Nachrichten", "country": "DE", "handle": "@ntvNachrichten", "lang": "de" },
+    { "id": "phoenix", "name": "phoenix", "country": "DE", "handle": "@phoenix", "lang": "de" },
+    { "id": "tagesschau", "name": "tagesschau", "country": "DE", "handle": "@tagesschau", "lang": "de" },
+    { "id": "dw", "name": "DW News", "country": "INT", "handle": "@dwnews", "lang": "en" },
+    { "id": "aljazeera", "name": "Al Jazeera English", "country": "INT", "handle": "@aljazeeraenglish", "lang": "en" },
+    { "id": "france24en", "name": "France 24 English", "country": "INT", "handle": "@France24_en", "lang": "en" },
+    { "id": "euronews", "name": "euronews", "country": "INT", "handle": "@euronews", "lang": "en" },
+    { "id": "skynews", "name": "Sky News", "country": "GB", "handle": "@SkyNews", "lang": "en" },
+    { "id": "abc", "name": "ABC News", "country": "US", "handle": "@ABCNews", "lang": "en" },
+    { "id": "nbc", "name": "NBC News NOW", "country": "US", "handle": "@NBCNews", "lang": "en" },
+    { "id": "cbs", "name": "CBS News", "country": "US", "handle": "@CBSNews", "lang": "en" },
+    { "id": "livenow", "name": "LiveNOW from FOX", "country": "US", "handle": "@LiveNOWFOX", "lang": "en" },
+    { "id": "bloomberg", "name": "Bloomberg Television", "country": "US", "handle": "@markets", "lang": "en", "note": "Wirtschaft & Börse" },
+    { "id": "france24fr", "name": "France 24 Français", "country": "FR", "handle": "@France24_fr", "lang": "fr" },
+    { "id": "skytg24", "name": "Sky TG24", "country": "IT", "handle": "@skytg24", "lang": "it" },
+    { "id": "cnnee", "name": "CNN en Español", "country": "LATAM", "handle": "@cnnee", "lang": "es" },
+    { "id": "wion", "name": "WION", "country": "ASIA", "handle": "@WION", "lang": "en" },
+    { "id": "ann", "name": "ANN News (Japan)", "country": "ASIA", "handle": "@ANNnewsCH", "lang": "ja" },
+    { "id": "nasa", "name": "NASA", "country": "SPACE", "handle": "@NASA", "lang": "en", "note": "Raumfahrt, Starts & ISS" }
+  ],
+
+  "defaultInterests": [],
 
   "topics": [
     {
@@ -40,7 +85,20 @@
         { "top": true, "region": "CH" },
         { "section": "NATION", "region": "CH" }
       ],
-      "youtube": [ { "name": "SRF News", "handle": "@srfnews" } ]
+      "youtube": [
+        { "name": "SRF News", "handle": "@srfnews" }
+      ]
+    },
+    {
+      "id": "zuerich", "group": "Welt & Politik", "label": "Zürich", "icon": "⌂",
+      "description": "Stadt und Kanton Zürich, Winterthur und Region.",
+      "feeds": [
+        { "name": "NZZ Zürich", "url": "https://www.nzz.ch/zuerich.rss", "lang": "de" }
+      ],
+      "google": [
+        { "q": "\"Stadt Zürich\" OR \"Kanton Zürich\" OR Winterthur", "region": "CH" }
+      ],
+      "youtube": []
     },
     {
       "id": "welt", "group": "Welt & Politik", "label": "Welt", "icon": "◎",
@@ -70,7 +128,9 @@
         { "q": "UNO OR \"Vereinte Nationen\" OR Sicherheitsrat OR Guterres", "region": "CH" },
         { "q": "\"United Nations\" OR \"UN Security Council\" OR \"UN General Assembly\"", "region": "US" }
       ],
-      "youtube": [ { "name": "United Nations", "handle": "@UnitedNations" } ]
+      "youtube": [
+        { "name": "United Nations", "handle": "@UnitedNations" }
+      ]
     },
     {
       "id": "europa", "group": "Welt & Politik", "label": "Europa & EU", "icon": "✧",
@@ -117,16 +177,6 @@
       ]
     },
     {
-      "id": "konflikte", "group": "Welt & Politik", "label": "Krisen & Konflikte", "icon": "⚑",
-      "description": "Ukraine, Nahost und andere Krisenherde.",
-      "feeds": [],
-      "google": [
-        { "q": "Ukraine-Krieg OR Nahost OR Gaza OR Waffenstillstand", "region": "CH" },
-        { "q": "Ukraine war OR Middle East OR ceasefire", "region": "US" }
-      ],
-      "youtube": []
-    },
-    {
       "id": "klima", "group": "Welt & Politik", "label": "Klima & Umwelt", "icon": "❋",
       "description": "Klimapolitik, Energie, Wetterextreme, Natur.",
       "feeds": [
@@ -138,7 +188,98 @@
       ],
       "youtube": []
     },
-
+    {
+      "id": "ukraine", "group": "Krieg & Sicherheit", "label": "Krieg in der Ukraine", "icon": "◩",
+      "description": "Front, Angriffe, Verhandlungen und Hilfe – Russland und die Ukraine.",
+      "feeds": [],
+      "google": [
+        { "q": "Ukraine Krieg OR Selenskyj OR Kiew OR Putin", "region": "CH" },
+        { "q": "\"Ukraine war\" OR Zelensky OR Kyiv OR Kremlin", "region": "GB" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "nahost", "group": "Krieg & Sicherheit", "label": "Nahost", "icon": "◭",
+      "description": "Israel, Gaza, Westjordanland, Libanon, Iran, Syrien, Jemen.",
+      "feeds": [
+        { "name": "BBC Middle East", "url": "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Nahost OR Israel OR Gaza OR Iran OR Libanon OR Syrien", "region": "CH" },
+        { "q": "Israel OR Gaza OR Iran OR \"Middle East\"", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "konflikte", "group": "Krieg & Sicherheit", "label": "Kriege & Krisen weltweit", "icon": "⚑",
+      "description": "Sudan, Kongo, Sahel, Myanmar, Haiti und andere Krisenherde.",
+      "feeds": [],
+      "google": [
+        { "q": "Bürgerkrieg OR Rebellen OR Militärputsch OR Waffenstillstand OR Flüchtlinge", "region": "CH" },
+        { "q": "Sudan OR Congo OR Sahel OR Myanmar OR Haiti conflict OR fighting", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "verteidigung", "group": "Krieg & Sicherheit", "label": "Militär & Verteidigung", "icon": "◬",
+      "description": "NATO, Schweizer Armee, Rüstung und Sicherheitspolitik.",
+      "feeds": [
+        { "name": "Defense News", "url": "https://www.defensenews.com/arc/outboundfeeds/rss/?outputType=xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Armee OR NATO OR Rüstung OR Sicherheitspolitik OR Kampfjet", "region": "CH" },
+        { "q": "NATO OR Pentagon OR \"defense spending\"", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "deutschland", "group": "Regionen", "label": "Deutschland & Österreich", "icon": "▤",
+      "description": "Politik und Gesellschaft in den Nachbarländern.",
+      "feeds": [
+        { "name": "Tagesschau Inland", "url": "https://www.tagesschau.de/inland/index~rss2.xml", "lang": "de" }
+      ],
+      "google": [
+        { "top": true, "region": "DE" },
+        { "top": true, "region": "AT" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "asien", "group": "Regionen", "label": "Asien & China", "icon": "◑",
+      "description": "China, Japan, Indien, Taiwan, Korea, Südostasien.",
+      "feeds": [
+        { "name": "BBC Asia", "url": "https://feeds.bbci.co.uk/news/world/asia/rss.xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "China OR Japan OR Indien OR Taiwan OR Südkorea", "region": "CH" },
+        { "q": "China OR Japan OR India OR Taiwan OR Korea", "region": "GB" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "afrika", "group": "Regionen", "label": "Afrika", "icon": "◒",
+      "description": "Politik, Wirtschaft und Gesellschaft auf dem afrikanischen Kontinent.",
+      "feeds": [
+        { "name": "BBC Africa", "url": "https://feeds.bbci.co.uk/news/world/africa/rss.xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Afrika", "region": "CH" },
+        { "q": "Africa", "region": "GB" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "lateinamerika", "group": "Regionen", "label": "Lateinamerika", "icon": "◓",
+      "description": "Argentinien, Mexiko, Kolumbien, Venezuela, Chile & Co.",
+      "feeds": [
+        { "name": "BBC Latin America", "url": "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Lateinamerika OR Argentinien OR Mexiko OR Venezuela OR Kolumbien", "region": "CH" },
+        { "q": "Argentina OR Mexico OR Colombia OR Venezuela OR Chile", "region": "US" }
+      ],
+      "youtube": []
+    },
     {
       "id": "wirtschaft", "group": "Wirtschaft & Finanzen", "label": "Wirtschaft Schweiz", "icon": "⇅",
       "description": "SNB, Unternehmen, Arbeitsmarkt, Franken.",
@@ -163,7 +304,9 @@
         { "q": "Weltwirtschaft OR IWF OR Zölle OR Inflation OR EZB OR Fed", "region": "CH" },
         { "q": "global economy OR IMF OR tariffs OR \"Federal Reserve\" OR recession", "region": "GB" }
       ],
-      "youtube": [ { "name": "Bloomberg Television", "handle": "@markets" } ]
+      "youtube": [
+        { "name": "Bloomberg Television", "handle": "@markets" }
+      ]
     },
     {
       "id": "boerse", "group": "Wirtschaft & Finanzen", "label": "Börse & Märkte", "icon": "↗",
@@ -176,15 +319,28 @@
       "youtube": []
     },
     {
+      "id": "startups", "group": "Wirtschaft & Finanzen", "label": "Startups & Unternehmen", "icon": "⌬",
+      "description": "Gründungen, Finanzierungsrunden, Big Tech, Übernahmen.",
+      "feeds": [
+        { "name": "TechCrunch", "url": "https://techcrunch.com/feed/", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Startup OR Jungunternehmen OR Finanzierungsrunde OR Übernahme", "region": "CH" },
+        { "q": "startup funding OR acquisition OR IPO", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
       "id": "krypto", "group": "Wirtschaft & Finanzen", "label": "Krypto", "icon": "₿",
       "description": "Bitcoin, Ethereum, Regulierung, Blockchain.",
       "feeds": [
         { "name": "CoinDesk", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "lang": "en" }
       ],
-      "google": [ { "q": "Bitcoin OR Krypto OR Ethereum", "region": "CH" } ],
+      "google": [
+        { "q": "Bitcoin OR Krypto OR Ethereum", "region": "CH" }
+      ],
       "youtube": []
     },
-
     {
       "id": "fussball", "group": "Sport", "label": "Fussball", "icon": "⊙",
       "description": "Super League, Nati, Champions League, Bundesliga, Premier League.",
@@ -210,7 +366,9 @@
         { "q": "\"Formel 1\" OR F1", "region": "CH" },
         { "q": "\"Formula 1\" OR F1 Grand Prix", "region": "GB" }
       ],
-      "youtube": [ { "name": "FORMULA 1", "id": "UCB_qr75-ydFVKSF9Dmo6izg" } ]
+      "youtube": [
+        { "name": "FORMULA 1", "id": "UCB_qr75-ydFVKSF9Dmo6izg" }
+      ]
     },
     {
       "id": "motogp", "group": "Sport", "label": "MotoGP", "icon": "»",
@@ -223,13 +381,17 @@
         { "q": "MotoGP", "region": "CH" },
         { "q": "MotoGP", "region": "GB" }
       ],
-      "youtube": [ { "name": "MotoGP", "handle": "@motogp" } ]
+      "youtube": [
+        { "name": "MotoGP", "handle": "@motogp" }
+      ]
     },
     {
       "id": "eishockey", "group": "Sport", "label": "Eishockey", "icon": "⬡",
       "description": "National League, Hockey-Nati, Schweizer in der NHL.",
       "feeds": [],
-      "google": [ { "q": "Eishockey \"National League\" OR Hockey-Nati OR NHL Schweizer", "region": "CH" } ],
+      "google": [
+        { "q": "Eishockey \"National League\" OR Hockey-Nati OR NHL Schweizer", "region": "CH" }
+      ],
       "youtube": []
     },
     {
@@ -243,15 +405,58 @@
       "youtube": []
     },
     {
+      "id": "ski", "group": "Sport", "label": "Ski & Wintersport", "icon": "△",
+      "description": "Ski-Weltcup, Biathlon, Snowboard, Langlauf.",
+      "feeds": [],
+      "google": [
+        { "q": "\"Ski alpin\" OR Skiweltcup OR Weltcup Ski OR Biathlon OR Snowboard", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "radsport", "group": "Sport", "label": "Radsport", "icon": "⊘",
+      "description": "Tour de France, Giro, Tour de Suisse, Mountainbike.",
+      "feeds": [
+        { "name": "BBC Cycling", "url": "https://feeds.bbci.co.uk/sport/cycling/rss.xml", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Radsport OR \"Tour de France\" OR \"Tour de Suisse\" OR Giro", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "basketball", "group": "Sport", "label": "Basketball & NBA", "icon": "⊚",
+      "description": "NBA, EuroLeague und Basketball weltweit.",
+      "feeds": [
+        { "name": "ESPN NBA", "url": "https://www.espn.com/espn/rss/nba/news", "lang": "en" }
+      ],
+      "google": [
+        { "q": "NBA", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "ussport", "group": "Sport", "label": "NFL & US-Sport", "icon": "▰",
+      "description": "NFL, MLB, NHL – Sport aus Nordamerika.",
+      "feeds": [
+        { "name": "ESPN NFL", "url": "https://www.espn.com/espn/rss/nfl/news", "lang": "en" }
+      ],
+      "google": [
+        { "q": "NFL OR MLB OR \"Super Bowl\" OR \"World Series\"", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
       "id": "sport", "group": "Sport", "label": "Sport allgemein", "icon": "◐",
       "description": "Alles Weitere aus dem Sport, z.B. Ski, Leichtathletik, Velo.",
       "feeds": [
         { "name": "SRF Sport", "url": "https://www.srf.ch/sport/bnf/rss/718", "lang": "de" }
       ],
-      "google": [ { "section": "SPORTS", "region": "CH" } ],
+      "google": [
+        { "section": "SPORTS", "region": "CH" }
+      ],
       "youtube": []
     },
-
     {
       "id": "gaming", "group": "Tech & Games", "label": "Gaming", "icon": "▲",
       "description": "Games, Releases, Hardware & Industrie.",
@@ -271,6 +476,16 @@
         { "name": "GameSpot", "handle": "@gamespot" },
         { "name": "GameStar", "handle": "@GameStarDE" }
       ]
+    },
+    {
+      "id": "esports", "group": "Tech & Games", "label": "E-Sport", "icon": "◇",
+      "description": "League of Legends, CS2, Valorant, Turniere & Teams.",
+      "feeds": [],
+      "google": [
+        { "q": "esports OR \"League of Legends\" OR CS2 OR Valorant", "region": "US" },
+        { "q": "E-Sport OR Esports", "region": "CH" }
+      ],
+      "youtube": []
     },
     {
       "id": "cyber", "group": "Tech & Games", "label": "Cybersecurity", "icon": "⌁",
@@ -302,7 +517,9 @@
         { "name": "The Verge", "url": "https://www.theverge.com/rss/index.xml", "lang": "en" },
         { "name": "Ars Technica", "url": "https://feeds.arstechnica.com/arstechnica/index", "lang": "en" }
       ],
-      "google": [ { "section": "TECHNOLOGY", "region": "CH" } ],
+      "google": [
+        { "section": "TECHNOLOGY", "region": "CH" }
+      ],
       "youtube": [
         { "name": "Fireship", "id": "UCsBjURrPoezykLs9EqgamOA" },
         { "name": "MKBHD", "handle": "@mkbhd" }
@@ -318,7 +535,9 @@
         { "q": "\"künstliche Intelligenz\" OR KI-Modell", "region": "CH" },
         { "q": "\"artificial intelligence\" OR OpenAI OR Anthropic OR \"Google Gemini\"", "region": "US" }
       ],
-      "youtube": [ { "name": "Two Minute Papers", "handle": "@TwoMinutePapers" } ]
+      "youtube": [
+        { "name": "Two Minute Papers", "handle": "@TwoMinutePapers" }
+      ]
     },
     {
       "id": "weltraum", "group": "Tech & Games", "label": "Weltraum", "icon": "☾",
@@ -327,31 +546,110 @@
         { "name": "NASA", "url": "https://www.nasa.gov/news-release/feed/", "lang": "en" },
         { "name": "Space.com", "url": "https://www.space.com/feeds/all", "lang": "en" }
       ],
-      "google": [ { "q": "Raumfahrt OR ESA OR NASA OR SpaceX", "region": "CH" } ],
-      "youtube": []
-    },
-
-    {
-      "id": "wissenschaft", "group": "Wissen & Kultur", "label": "Wissenschaft", "icon": "◈",
-      "description": "Forschung, Entdeckungen, ETH & Co.",
-      "feeds": [],
-      "google": [ { "section": "SCIENCE", "region": "CH" } ],
-      "youtube": [ { "name": "Kurzgesagt", "id": "UCsXVk37bltHxD1rDPwtNM8Q" } ]
-    },
-    {
-      "id": "gesundheit", "group": "Wissen & Kultur", "label": "Gesundheit", "icon": "♡",
-      "description": "Medizin, Forschung, Gesundheitspolitik.",
-      "feeds": [],
-      "google": [ { "section": "HEALTH", "region": "CH" } ],
+      "google": [
+        { "q": "Raumfahrt OR ESA OR NASA OR SpaceX", "region": "CH" }
+      ],
       "youtube": []
     },
     {
-      "id": "unterhaltung", "group": "Wissen & Kultur", "label": "Film, Serien & Musik", "icon": "♫",
+      "id": "kultur", "group": "Kultur & Gesellschaft", "label": "Kultur & Kunst", "icon": "❖",
+      "description": "Kunst, Theater, Oper, Museen, Architektur, Festivals.",
+      "feeds": [
+        { "name": "NZZ Feuilleton", "url": "https://www.nzz.ch/feuilleton.rss", "lang": "de" },
+        { "name": "Guardian Culture", "url": "https://www.theguardian.com/culture/rss", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Kunst OR Theater OR Museum OR Ausstellung OR Oper OR Festival", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "buecher", "group": "Kultur & Gesellschaft", "label": "Bücher & Literatur", "icon": "≡",
+      "description": "Neuerscheinungen, Autorinnen und Autoren, Literaturpreise.",
+      "feeds": [
+        { "name": "Guardian Books", "url": "https://www.theguardian.com/books/rss", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Buch OR Roman OR Literaturpreis OR Schriftsteller OR Bestseller", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "unterhaltung", "group": "Kultur & Gesellschaft", "label": "Film, Serien & Musik", "icon": "♫",
       "description": "Kino, Streaming, Musik, Popkultur.",
       "feeds": [],
       "google": [
         { "section": "ENTERTAINMENT", "region": "CH" },
         { "q": "Netflix OR Kinostart OR Serie OR Album", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "gesellschaft", "group": "Kultur & Gesellschaft", "label": "Gesellschaft", "icon": "◌",
+      "description": "Bildung, Familie, Migration, Religion, Gleichstellung.",
+      "feeds": [],
+      "google": [
+        { "q": "Gesellschaft OR Bildung OR Familie OR Migration OR Gleichstellung OR Religion", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "geschichte", "group": "Kultur & Gesellschaft", "label": "Geschichte", "icon": "∴",
+      "description": "Archäologie, historische Funde und Jahrestage.",
+      "feeds": [],
+      "google": [
+        { "q": "Archäologie OR historisch OR Geschichte Fund", "region": "CH" },
+        { "q": "archaeology OR archaeologists OR historians", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "wissenschaft", "group": "Wissen & Leben", "label": "Wissenschaft", "icon": "◈",
+      "description": "Forschung, Entdeckungen, ETH & Co.",
+      "feeds": [],
+      "google": [
+        { "section": "SCIENCE", "region": "CH" }
+      ],
+      "youtube": [
+        { "name": "Kurzgesagt", "id": "UCsXVk37bltHxD1rDPwtNM8Q" }
+      ]
+    },
+    {
+      "id": "gesundheit", "group": "Wissen & Leben", "label": "Gesundheit", "icon": "♡",
+      "description": "Medizin, Forschung, Gesundheitspolitik.",
+      "feeds": [],
+      "google": [
+        { "section": "HEALTH", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "reisen", "group": "Wissen & Leben", "label": "Reisen", "icon": "⇢",
+      "description": "Ferien, Flughäfen, Bahn, Tourismus und Reisetipps.",
+      "feeds": [
+        { "name": "Guardian Travel", "url": "https://www.theguardian.com/travel/rss", "lang": "en" }
+      ],
+      "google": [
+        { "q": "Reisen OR Ferien OR Tourismus OR Flughafen Zürich OR Airline", "region": "CH" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "mobilitaet", "group": "Wissen & Leben", "label": "Auto & Mobilität", "icon": "⊶",
+      "description": "Elektroautos, ÖV, SBB, Verkehr und neue Mobilität.",
+      "feeds": [],
+      "google": [
+        { "q": "Elektroauto OR E-Auto OR Autoindustrie OR SBB OR Verkehr", "region": "CH" },
+        { "q": "electric vehicles OR Tesla OR automakers", "region": "US" }
+      ],
+      "youtube": []
+    },
+    {
+      "id": "essen", "group": "Wissen & Leben", "label": "Essen & Genuss", "icon": "◔",
+      "description": "Gastronomie, Restaurants, Food-Trends, Wein.",
+      "feeds": [],
+      "google": [
+        { "q": "Restaurant OR Gastronomie OR Koch OR Wein OR Guide Michelin", "region": "CH" }
       ],
       "youtube": []
     }

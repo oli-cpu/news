@@ -4,22 +4,28 @@ Deine persönliche Google-News-Alternative: Nachrichten und Videos zu deinen Int
 
 ```
 index.html                        ← die ganze Website (eine Datei)
-config.json                       ← Themen, Quellen, YouTube-Kanäle, Branding
+config.json                       ← Themen, Quellen, YouTube-Kanäle, Branding, Stimme
 scripts/fetch_news.py             ← sammelt alles und schreibt news.json
+scripts/make_audio.py             ← spricht das Radio mit Neural-Stimme ein (MP3)
+scripts/should_run.py             ← Zeitplan-Wächter: genau ein Update um 05:00 und 12:00 Uhr
 .github/workflows/update-news.yml ← läuft 3× täglich automatisch
 ```
 
-## Themen (26, in 5 Gruppen)
+## Themen (47, in 8 Gruppen)
 
 | Gruppe | Themen |
 |---|---|
-| Welt & Politik | Schweiz · Welt · UNO & Diplomatie · Europa & EU · USA · Brasilien (Politik & Wirtschaft) · Krisen & Konflikte · Klima & Umwelt |
-| Wirtschaft & Finanzen | Wirtschaft Schweiz · Globale Wirtschaft · Börse & Märkte · Krypto |
-| Sport | Fussball · Formel 1 · MotoGP · Eishockey · Tennis · Sport allgemein |
-| Tech & Games | Gaming · Cybersecurity · Tech · Künstliche Intelligenz · Weltraum |
-| Wissen & Kultur | Wissenschaft · Gesundheit · Film, Serien & Musik |
+| Welt & Politik | Schweiz · Zürich · Welt · UNO & Diplomatie · Europa & EU · USA · Brasilien (Politik & Wirtschaft) · Klima & Umwelt |
+| Krieg & Sicherheit | Krieg in der Ukraine · Nahost · Kriege & Krisen weltweit · Militär & Verteidigung |
+| Regionen | Deutschland & Österreich · Asien & China · Afrika · Lateinamerika |
+| Wirtschaft & Finanzen | Wirtschaft Schweiz · Globale Wirtschaft · Börse & Märkte · Startups & Unternehmen · Krypto |
+| Sport | Fussball · Formel 1 · MotoGP · Eishockey · Tennis · Ski & Wintersport · Radsport · Basketball & NBA · NFL & US-Sport · Sport allgemein |
+| Tech & Games | Gaming · E-Sport · Cybersecurity · Tech · Künstliche Intelligenz · Weltraum |
+| Kultur & Gesellschaft | Kultur & Kunst · Bücher & Literatur · Film, Serien & Musik · Gesellschaft · Geschichte |
+| Wissen & Leben | Wissenschaft · Gesundheit · Reisen · Auto & Mobilität · Essen & Genuss |
 
-Auf der Website wählst du unter **Interessen** einzelne Themen oder ganze Gruppen („+ ALLE“) und ergänzt eigene Stichworte (z.B. „Lula“, „Ferrari“, „Swisscom“).
+Beim ersten Besuch ist **nichts vorausgewählt**. Solange keine Interessen gewählt sind, zeigt „Für dich“ die grössten Meldungen des Tages.
+Unter **Interessen** wählst du einzelne Themen oder ganze Gruppen („+ ALLE“), kannst die Liste filtern (z.B. „Krieg“) und eigene Stichworte ergänzen (z.B. „Lula“, „Ferrari“, „Swisscom“).
 
 ## So funktioniert's
 
@@ -53,7 +59,59 @@ Auf der Website wählst du unter **Interessen** einzelne Themen oder ganze Grupp
 3. Warten bis der DNS-Check grün ist (Minuten bis wenige Stunden), dann **Enforce HTTPS** aktivieren.
 4. Empfehlung: Unter **GitHub → Profil-Settings → Pages → Add a domain** die Domain `studer.website` **verifizieren**. Dann kann niemand sonst Subdomains davon auf GitHub Pages übernehmen (Schutz vor Subdomain-Takeover).
 
-Danach aktualisiert sich alles von selbst (ca. 05:23, 12:23 und 17:23 Uhr Schweizer Winterzeit). Zeiten ändern: `cron` in `update-news.yml` (Zeiten in UTC).
+Danach aktualisiert sich alles von selbst um 05:00 und 12:00 Uhr (siehe unten).
+
+## Automatische Updates um 05:00 und 12:00 Uhr
+
+Die Seite aktualisiert sich **von selbst** – du musst auf GitHub nichts tun. Die Zeiten stehen in `config.json`:
+
+```json
+"schedule": { "times": ["05:00", "12:00"], "timezone": "Europe/Zurich", "windowHours": 3 }
+```
+
+So funktioniert's:
+
+- GitHub kennt nur UTC und startet geplante Läufe oft 5–30 Minuten zu spät, manchmal auch gar nicht. Darum startet der Workflow rund um jede Wunschzeit mehrmals (für Sommer- **und** Winterzeit, plus Ersatz-Termin 40 Min später).
+- `scripts/should_run.py` lässt pro Termin **genau ein** Update durch. Alle anderen Läufe beenden sich nach ~15 Sekunden (grauer Haken „skipped“ bei *deploy* – das ist normal).
+- Manuell über **Run workflow** (Standard „manual“) wird immer sofort aktualisiert.
+- Bleibt ein Update trotzdem aus, zeigt die Startseite „FEED VERALTET“ mit roter Markierung.
+
+### Optional: auf die Minute pünktlich (externer Wecker)
+
+Wer es exakt um 05:00 / 12:00 will, lässt den Workflow von aussen starten. Der Wächter verhindert doppelte Updates, die GitHub-Termine bleiben als Reserve.
+
+**1. Token erstellen:** GitHub → Profilbild → *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*
+- *Repository access:* **Only select repositories** → nur dein News-Repo
+- *Permissions → Repository → Actions:* **Read and write** (sonst nichts)
+- Ablaufdatum setzen (z.B. 1 Jahr) und Token kopieren.
+
+**2a. Gratis mit cron-job.org:** Konto anlegen → *Create cronjob*
+- URL: `https://api.github.com/repos/<DEIN-NAME>/<REPO>/actions/workflows/update-news.yml/dispatches`
+- Zeitplan: täglich **05:00** und **12:00**, Zeitzone **Europe/Zurich**
+- *Advanced:* Methode **POST**, Header
+  `Authorization: Bearer <TOKEN>` · `Accept: application/vnd.github+json` · `X-GitHub-Api-Version: 2022-11-28`
+- Body: `{"ref":"main","inputs":{"source":"cron"}}`
+- Erfolg = Antwort **204**.
+
+**2b. Oder mit dem Heimserver** (`crontab -e`, Server in Schweizer Zeit):
+
+```bash
+0 5,12 * * * curl -s -X POST -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/<DEIN-NAME>/<REPO>/actions/workflows/update-news.yml/dispatches \
+  -d '{"ref":"main","inputs":{"source":"cron"}}'
+```
+
+Der Token kann nur Workflows in diesem einen Repo starten. Trotzdem: nicht weitergeben, und bei cron-job.org liegt er bei einem Drittanbieter – der Heimserver ist die sicherere Variante.
+
+## Live-News
+
+Der Reiter **Live** zeigt Nachrichtensender, die auf YouTube live senden – mit Länder-Auswahl (Brasilien, Schweiz, Deutschland, International, USA …). Beim Update prüft das Script, welche Sender gerade live sind (rote LIVE-Markierung, roter Punkt in der Navigation).
+
+- Klick auf einen Sender → läuft im Player. Startet ein Stream nicht: **↻ Stream neu laden** (holt den aktuellen Stream des Kanals) oder **Auf YouTube ↗**. Manche Sender erlauben das Einbetten nicht, dann geht nur YouTube.
+- Sender hinzufügen/ändern in `config.json` → `"live"`:
+  `{ "id": "cnnbrasil", "name": "CNN Brasil", "country": "BR", "handle": "@CNNbrasil", "lang": "pt" }`
+  Den Handle (`@…`) findest du in der Adresse der YouTube-Kanalseite. Neue Länder in `"liveCountries"` benennen.
+- Wird ein Kanal nicht gefunden, steht er unter **[ QUELLEN-STATUS ]** als „Live: …“ mit Fehler – dann Handle prüfen.
 
 ## Anpassen
 
@@ -65,7 +123,7 @@ Alles in `config.json`:
 - **Google-News-Suche**: `{ "q": "Begriff OR \"genaue Phrase\"", "region": "CH" }` – Regionen: `CH`, `DE`, `AT`, `US`, `GB`, `BR`, `PT`.
   Rubriken: `{ "section": "WORLD|NATION|BUSINESS|TECHNOLOGY|SCIENCE|HEALTH|SPORTS|ENTERTAINMENT", "region": "CH" }`, Schlagzeilen: `{ "top": true, "region": "CH" }`
 - **YouTube-Kanal**: `{ "name": "Kanal", "handle": "@kanalname" }` (oder `"id": "UC…"`). Shorts werden ignoriert (`includeShorts`).
-- `defaultInterests`: was beim ersten Besuch vorausgewählt ist.
+- `defaultInterests`: bleibt leer (`[]`), damit beim ersten Besuch nichts vorausgewählt ist.
 
 Unter **[ QUELLEN-STATUS ]** im Footer siehst du nach jedem Lauf, welche Quelle funktioniert hat. Zeigt eine Quelle dauerhaft „FEHLER“, URL anpassen oder entfernen.
 
@@ -73,18 +131,26 @@ Unter **[ QUELLEN-STATUS ]** im Footer siehst du nach jedem Lauf, welche Quelle 
 
 Der Workflow nutzt **GitHub Models** mit dem eingebauten `GITHUB_TOKEN` (Permission `models: read`). Kein Key nötig.
 
-- Das Gratis-Kontingent ist begrenzt (ca. 15 Anfragen/Minute, ~150/Tag). Darum macht das Script höchstens **45 Anfragen pro Lauf** (`ai.maxCallsPerRun`) mit 4,5 s Abstand. Bei 3 Läufen pro Tag bleibt das unter dem Limit. Moderationen für deine `defaultInterests` werden zuerst erstellt.
+- Das Gratis-Kontingent ist begrenzt (ca. 15 Anfragen/Minute, ~150/Tag). Darum macht das Script höchstens **45 Anfragen pro Lauf** (`ai.maxCallsPerRun`) mit 4,5 s Abstand und moderiert jeweils 5 Rubriken pro Anfrage (`ai.radioBatch`). Ein Lauf braucht so typischerweise 15–25 Anfragen. Nach 3 Fehlern in Folge läuft der Rest ohne KI weiter.
 - Fällt die KI aus, läuft alles weiter: Titel bleiben im Original, das Radio baut die Moderation aus Vorlagen und liest Fremdsprachiges mit passender Stimme.
 - Anderes Modell: Repository-Variable `AI_MODEL` (Settings → Secrets and variables → Actions → Variables).
 - KI aus: `"enabled": false` in `config.json`.
 
 ## Radio / Podcast
 
-- Läuft komplett im Browser (Web Speech API), nichts wird hochgeladen.
-- **Beste Stimmen: Microsoft Edge** (natürliche „Online (Natural)“-Stimmen, auch `de-CH` wie *Leni* oder *Jan*). Chrome hat brauchbare Google-Stimmen, Safari nutzt die Systemstimmen.
-- Länge Kurz/Normal/Lang, Tempo, Stimme, Jingle und „Fremdsprachen im Original“ einstellbar.
+**Natürliche Stimme (Standard):** Beim Update spricht `scripts/make_audio.py` das Radio mit einer Microsoft-Neural-Stimme ein (Paket `edge-tts`, gratis, kein Konto). Die MP3s liegen in `audio/`, die Website spielt sie ab. Das klingt deutlich menschlicher als Browser-Stimmen und läuft auch bei gesperrtem Handy weiter.
+
+- Stimme ändern: `tts.voice` in `config.json` oder Repository-Variable `TTS_VOICE`. Gute deutsche Stimmen:
+  `de-CH-LeniNeural` (Standard, Schweizer Färbung) · `de-CH-JanNeural` (männlich, CH) · `de-DE-SeraphinaMultilingualNeural` (sehr natürlich, spricht auch englische/portugiesische Namen gut) · `de-DE-FlorianMultilingualNeural` (männlich) · `de-DE-ConradNeural` · `de-AT-IngridNeural`
+- Tempo: `tts.rate` (z.B. `"+5%"`), Tonhöhe: `tts.pitch`.
+- Eingesprochen werden Intro, Überblick, eine Rubrik pro Thema (ab 2 Artikeln) und Outro. Die Seite stellt daraus dein persönliches Briefing zusammen.
+- `edge-tts` nutzt den Vorlese-Dienst von Microsoft Edge – gratis, aber kein offizielles API. Fällt er aus, schlägt nur dieser Schritt fehl (der Workflow läuft weiter) und die Seite nimmt automatisch die Browser-Stimme.
+
+**Browser-Stimme (Fallback / Auswahl unter „Stimme“):** läuft komplett im Browser (Web Speech API). Am besten in **Microsoft Edge** („Online (Natural)“-Stimmen). Nur hier werden deine eigenen Stichworte mitgelesen.
+
+- Länge Kurz/Normal/Lang, Tempo, Stimme und Jingle einstellbar.
 - Transkript kopieren oder als `.txt` herunterladen. Klick auf einen Satz springt dorthin, Leertaste = Play/Pause.
-- ♪ bei einem Artikel spielt nur diese Meldung ab.
+- ♪ bei einem Artikel liest nur diese Meldung (Browser-Stimme).
 
 ## Mit dem Heimserver
 
