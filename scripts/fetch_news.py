@@ -36,6 +36,7 @@ import math
 import os
 import re
 import sys
+import threading
 import time
 import unicodedata
 import urllib.error
@@ -71,7 +72,23 @@ def log(msg: str) -> None:
     print(msg, flush=True)
 
 
+_HOST_LOCK = threading.Lock()
+_HOST_SEM: dict[str, threading.Semaphore] = {}
+
+
+def _host_slot(url: str) -> threading.Semaphore:
+    """Max. 4 gleichzeitige Anfragen pro Server (Google News & Co. nicht überlasten)."""
+    host = urllib.parse.urlsplit(url).netloc.lower()
+    with _HOST_LOCK:
+        return _HOST_SEM.setdefault(host, threading.Semaphore(4))
+
+
 def http_get(url: str, timeout: int = 20, extra_headers: dict | None = None) -> tuple[bytes, str]:
+    with _host_slot(url):
+        return _http_get(url, timeout, extra_headers)
+
+
+def _http_get(url: str, timeout: int = 20, extra_headers: dict | None = None) -> tuple[bytes, str]:
     headers = {
         "User-Agent": UA,
         "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html;q=0.8, */*;q=0.5",
@@ -381,6 +398,52 @@ def build_jobs(cfg: dict) -> list[dict]:
     return jobs
 
 
+YT_COOKIE = {"Cookie": "CONSENT=YES+cb; SOCS=CAI", "Accept": "text/html", "Accept-Language": "de-CH,de;q=0.9,en;q=0.8"}
+
+
+def check_live(ch: dict) -> dict:
+    """Prüft, ob ein YouTube-Kanal gerade live sendet (Seite /live des Kanals)."""
+    out = {k: ch[k] for k in ("id", "name", "country", "lang", "note", "handle") if ch.get(k)}
+    out.update({"live": False, "checked": NOW.isoformat(timespec="seconds")})
+    if ch.get("channelId"):
+        url = f"https://www.youtube.com/channel/{ch['channelId']}/live"
+    else:
+        h = ch["handle"] if ch["handle"].startswith("@") else "@" + ch["handle"]
+        url = f"https://www.youtube.com/{urllib.parse.quote(h, safe='@')}/live"
+    try:
+        data, _ = http_get(url, extra_headers=YT_COOKIE)
+        page = data.decode("utf-8", "ignore")
+    except Exception as e:  # noqa: BLE001
+        out["error"] = f"{type(e).__name__}: {e}"[:160]
+        return out
+    canon = re.search(r'<link rel="canonical" href="https://www\.youtube\.com/watch\?v=([\w-]{11})"', page)
+    vd = page.find('"videoDetails":{')
+    cid = None
+    if vd >= 0:
+        m = re.search(r'"channelId":"(UC[\w-]{22})"', page[vd:vd + 4000])
+        cid = m.group(1) if m else None
+    if not cid:
+        for rx in CHANNEL_RE:
+            m = rx.search(page)
+            if m:
+                cid = m.group(1)
+                break
+    if cid or ch.get("channelId"):
+        out["channelId"] = ch.get("channelId") or cid
+    if canon:
+        out["videoId"] = canon.group(1)
+        live_now = '"isLiveNow":true' in page or ('"isLive":true' in page[vd:vd + 6000] if vd >= 0 else False)
+        out["live"] = bool(live_now)
+        if not live_now and '"isUpcoming":true' in page:
+            out["upcoming"] = True
+        t = re.search(r'<meta name="title" content="([^"]*)"', page) or re.search(r'<meta property="og:title" content="([^"]*)"', page)
+        if t:
+            out["title"] = html.unescape(t.group(1))[:200]
+    if not out.get("channelId"):
+        out["error"] = "Kanal nicht gefunden (Handle prüfen)"
+    return out
+
+
 def run_job(job: dict) -> tuple[dict, list[dict], str | None]:
     try:
         if job["kind"] == "youtube":
@@ -542,6 +605,7 @@ class AI:
         self.calls = 0
         self.errors = 0
         self.last = 0.0
+        self.fails = 0
         ai_cfg = cfg.get("ai", {})
         self.budget = int(ai_cfg.get("maxCallsPerRun", 45))
         self.gap = 0.0
@@ -574,6 +638,17 @@ class AI:
     def chat(self, system: str, user: str, max_tokens: int = 1500, temperature: float = 0.4) -> str | None:
         if not self.ok:
             return None
+        res = self._chat(system, user, max_tokens, temperature)
+        if res is None:
+            self.fails += 1
+            if self.fails >= 3 and self.ok:
+                log("KI: 3 Fehler hintereinander – weiter ohne KI")
+                self.ok = False
+        else:
+            self.fails = 0
+        return res
+
+    def _chat(self, system: str, user: str, max_tokens: int, temperature: float) -> str | None:
         if self.calls >= self.budget:
             if self.budget >= 0:
                 log(f"KI: Budget von {self.budget} Anfragen pro Lauf erreicht – Rest ohne KI")
@@ -699,8 +774,15 @@ def story_lines(arts: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def topic_strength(arts: list[dict]) -> float:
+    return sum(a.get("score", 0) for a in arts[:4])
+
+
 def radio_segments(ai: AI, cfg: dict, by_topic: dict[str, list[dict]], top: list[dict]) -> dict:
-    words = cfg.get("ai", {}).get("segmentWords", 130)
+    """Moderationstexte: ein Überblick + ein Beitrag pro Rubrik (mehrere Rubriken pro KI-Anfrage)."""
+    ai_cfg = cfg.get("ai", {})
+    words = ai_cfg.get("segmentWords", 130)
+    batch = max(1, int(ai_cfg.get("radioBatch", 5)))
     system = RADIO_SYSTEM.replace("{show}", cfg.get("site", {}).get("radioName", "News Briefing"))
     out: dict = {"segments": {}, "overview": ""}
     if top:
@@ -710,21 +792,31 @@ def radio_segments(ai: AI, cfg: dict, by_topic: dict[str, list[dict]], top: list
                       f"Meldungen:\n{story_lines(top[:5])}", max_tokens=900, temperature=0.6)
         if txt:
             out["overview"] = clean_text(txt).replace("ß", "ss")
-    first = cfg.get("defaultInterests", [])
-    ordered = sorted(cfg["topics"], key=lambda t: t["id"] not in first)
-    for t in ordered:
+    # stärkste Rubriken zuerst, damit bei knappem Budget die wichtigsten moderiert sind
+    todo = [t for t in cfg["topics"] if len(by_topic.get(t["id"], [])) >= 3]
+    todo.sort(key=lambda t: topic_strength(by_topic[t["id"]]), reverse=True)
+    for i in range(0, len(todo), batch):
         if not ai.has_budget:
             break
-        arts = by_topic.get(t["id"], [])[:6]
-        if len(arts) < 3:
-            continue
-        txt = ai.chat(system,
-                      f"Rubrik: {t['label'].replace(' · ', ', ')}.\nSchreibe den Beitrag für diese Rubrik mit etwa {words} Wörtern. "
-                      f"Beginne mit einer kurzen, natürlichen Überleitung zur Rubrik (z.B. 'Weiter geht's mit …'), "
-                      f"behandle die wichtigsten 3–5 Meldungen und ende ohne Verabschiedung.\n\n"
-                      f"Meldungen:\n{story_lines(arts)}", max_tokens=900, temperature=0.6)
-        if txt:
-            out["segments"][t["id"]] = clean_text(txt).replace("ß", "ss")
+        chunk = todo[i:i + batch]
+        blocks = []
+        for t in chunk:
+            blocks.append(f"### id={t['id']} · Rubrik: {t['label'].replace(' · ', ', ')}\n"
+                          f"{story_lines(by_topic[t['id']][:6])}")
+        prompt = (
+            f"Schreibe für JEDE der folgenden {len(chunk)} Rubriken einen eigenen Radio-Beitrag mit etwa {words} "
+            f"Wörtern. Jeder Beitrag beginnt mit einer kurzen, natürlichen Überleitung zur Rubrik "
+            f"(abwechslungsreich, z.B. 'Weiter geht's mit …', 'Jetzt zu …', 'Und im …'), behandelt die wichtigsten "
+            f"3–5 Meldungen und endet ohne Verabschiedung. Jeder Beitrag muss für sich allein verständlich sein.\n"
+            f"Antworte ausschliesslich mit JSON im Format "
+            f'{{"segments": {{"<id>": "Text", ...}}}} und verwende genau die angegebenen ids.\n\n'
+            + "\n\n".join(blocks))
+        res = extract_json(ai.chat(system, prompt, max_tokens=min(4000, 420 * len(chunk) + 200), temperature=0.6))
+        segs = res.get("segments", res) if isinstance(res, dict) else {}
+        for t in chunk:
+            txt = segs.get(t["id"]) if isinstance(segs, dict) else None
+            if isinstance(txt, str) and len(txt) > 40:
+                out["segments"][t["id"]] = clean_text(txt).replace("ß", "ss")
     return out
 
 
@@ -776,6 +868,18 @@ def main() -> int:
                         n += 1
             log(f"  ✓ [{job['topic']}] {label}: {n}/{len(entries)}")
             source_status.append({"name": label, "topic": job["topic"], "ok": True, "items": n})
+        live_cfg = cfg.get("live", [])
+        live = list(ex.map(check_live, live_cfg)) if live_cfg else []
+    for l in live:
+        state = "LIVE" if l["live"] else ("geplant" if l.get("upcoming") else "offline")
+        if l.get("error"):
+            log(f"  ✗ [live] {l['name']}: {l['error']}")
+            source_status.append({"name": f"Live: {l['name']}", "topic": "live", "ok": False, "error": l["error"]})
+        else:
+            log(f"  ✓ [live] {l['name']}: {state}")
+            source_status.append({"name": f"Live: {l['name']}", "topic": "live", "ok": True, "items": int(l["live"])})
+    if live:
+        log(f"Live: {sum(l['live'] for l in live)}/{len(live)} Sender gerade live")
     log(f"Abruf fertig in {time.time() - t0:.1f}s")
 
     by_topic: dict[str, list[dict]] = {}
@@ -818,7 +922,8 @@ def main() -> int:
                     if v.get("lang") and v["lang"] != "de" and v["id"] not in ids:
                         ids.add(v["id"])
                         todo.append(v)
-            reserve = sum(1 for t in cfg["topics"] if len(by_topic.get(t["id"], [])) >= 3) + 1
+            n_radio = sum(1 for t in cfg["topics"] if len(by_topic.get(t["id"], [])) >= 3)
+            reserve = (math.ceil(n_radio / max(1, int(ai_cfg.get("radioBatch", 5)))) + 1) if ai_cfg.get("radio", True) else 0
             max_items = max(0, (ai.budget - reserve)) * 24
             if len(todo) > max_items:
                 todo = todo[:max_items]
@@ -848,6 +953,9 @@ def main() -> int:
         "articles": articles,
         "videos": [public(v) for vs in videos.values() for v in vs],
         "radio": radio,
+        "live": live,
+        "liveCountries": cfg.get("liveCountries", {}),
+        "schedule": cfg.get("schedule", {}),
         "ai": {"used": bool(ai and ai.calls), "model": getattr(ai, "model", None) if ai and ai.calls else None,
                "calls": ai.calls if ai else 0},
         "sources": source_status,
